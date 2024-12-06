@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Three Column Layout</title>
+    <style>
+        /* Modern CSS reset with improved defaults */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        /* Enhanced base styles */
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        /* Main container with subtle gradient background */
+        .container {
+            display: flex;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(145deg, #f8f9fa, #ffffff);
+        }
+
+        /* Left panel with modern styling */
+        .left-panel {
+            width: 20%;
+            background: linear-gradient(135deg, #ffffff, #f1f3f5);
+            padding: 25px;
+            overflow-y: auto;
+            border-right: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.03);
+        }
+
+        /* Center panel with clean background */
+        .center-panel {
+            width: 60%;
+            background-color: #ffffff;
+            padding: 25px;
+            overflow-y: auto;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        }
+
+        /* Right panel with modern styling */
+        .right-panel {
+            width: 20%;
+            background: linear-gradient(225deg, #ffffff, #f1f3f5);
+            padding: 25px;
+            overflow-y: auto;
+            border-left: 1px solid rgba(0,0,0,0.05);
+            box-shadow: -2px 0 5px rgba(0,0,0,0.03);
+        }
+
+        /* Enhanced panel content styling */
+        .panel-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Container for ister items with improved spacing */
+        .ister-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: 15px;
+            padding: 5px;
+        }
+
+        /* Modern styling for individual ister items */
+        .ister-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05),
+                        0 1px 3px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .ister-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08),
+                        0 2px 4px rgba(0,0,0,0.12);
+        }
+
+        /* Enhanced label styling */
+        .ister-label {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1a73e8;
+            margin-bottom: 12px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        /* Modern input field styling */
+        .ister-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e1e4e8;
+            border-radius: 8px;
+            font-size: 1em;
+            resize: none;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+
+        .ister-input:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26,115,232,0.2);
+            background-color: #ffffff;
+        }
+
+        .ister-input::placeholder {
+            color: #8795a1;
+            font-size: 0.95em;
+        }
+
+        /* Panel headers styling */
+        .panel-header {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+
+        /* Responsive design improvements */
+        @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-panel,
+            .center-panel,
+            .right-panel {
+                width: 100%;
+                height: auto;
+                border: none;
+                box-shadow: none;
+            }
+
+            .ister-container {
+                gap: 20px;
+            }
+
+            .ister-item {
+                min-height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="panel-content">
+                <h2 class="panel-header">ÇIKTI EKRANI</h2>
+            </div>
+        </div>
+
+        <div class="center-panel">
+            <div class="panel-content">
+                <h2 class="panel-header">Main Content Area</h2>
+                <p>{{ author_name }}</p>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="panel-content">
+                <div class="ister-container">
+                    <div class="ister-item">
+                        <label class="ister-label">1.İSTER</label>
+                        <textarea class="ister-input" placeholder="1. İster için giriş yapın..."></textarea>
+                    </div>
+                    <div class="ister-item">
+                        <label class="ister-label">2.İSTER</label>
+                        <textarea class="ister-input" placeholder="2. İster için giriş yapın..."></textarea>
+                    </div>
+                    <div class="ister-item">
+                        <label class="ister-label">3.İSTER</label>
+                        <textarea class="ister-input" placeholder="3. İster için giriş yapın..."></textarea>
+                    </div>
+                    <div class="ister-item">
+                        <label class="ister-label">4.İSTER</label>
+                        <textarea class="ister-input" placeholder="4. İster için giriş yapın..."></textarea>
+                    </div>
+                    <div class="ister-item">
+                        <label class="ister-label">5.İSTER</label>
+                        <textarea class="ister-input" placeholder="5. İster için giriş yapın..."></textarea>
+                    </div>
+                    <div class="ister-item">
+                        <label class="ister-label">6.İSTER</label>
+                        <textarea class="ister-input" placeholder="6. İster için giriş yapın..."></textarea>
+                    </div>
+                    <div class="ister-item">
+                        <label class="ister-label">7.İSTER</label>
+                        <textarea class="ister-input" placeholder="7. İster için giriş yapın..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
