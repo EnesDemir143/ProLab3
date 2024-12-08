@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enhanced Three Column Layout</title>
     <style>
-        /* Modern CSS reset with improved defaults */
+        /* Previous styles remain the same */
         * {
             margin: 0;
             padding: 0;
@@ -13,7 +13,6 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        /* Enhanced base styles */
         html, body {
             height: 100%;
             width: 100%;
@@ -22,7 +21,6 @@
             color: #2c3e50;
         }
 
-        /* Main container with subtle gradient background */
         .container {
             display: flex;
             height: 100%;
@@ -30,7 +28,6 @@
             background: linear-gradient(145deg, #f8f9fa, #ffffff);
         }
 
-        /* Left panel with modern styling */
         .left-panel {
             width: 20%;
             background: linear-gradient(135deg, #ffffff, #f1f3f5);
@@ -40,7 +37,6 @@
             box-shadow: 2px 0 5px rgba(0,0,0,0.03);
         }
 
-        /* Center panel with clean background */
         .center-panel {
             width: 60%;
             background-color: #ffffff;
@@ -49,7 +45,6 @@
             box-shadow: 0 0 15px rgba(0,0,0,0.05);
         }
 
-        /* Right panel with modern styling */
         .right-panel {
             width: 20%;
             background: linear-gradient(225deg, #ffffff, #f1f3f5);
@@ -59,14 +54,12 @@
             box-shadow: -2px 0 5px rgba(0,0,0,0.03);
         }
 
-        /* Enhanced panel content styling */
         .panel-content {
             height: 100%;
             display: flex;
             flex-direction: column;
         }
 
-        /* Container for ister items with improved spacing */
         .ister-container {
             display: flex;
             flex-direction: column;
@@ -75,7 +68,6 @@
             padding: 5px;
         }
 
-        /* Modern styling for individual ister items */
         .ister-item {
             flex: 1;
             display: flex;
@@ -88,13 +80,6 @@
             transition: all 0.3s ease;
         }
 
-        .ister-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.08),
-                        0 2px 4px rgba(0,0,0,0.12);
-        }
-
-        /* Enhanced label styling */
         .ister-label {
             font-size: 1.1em;
             font-weight: 600;
@@ -105,18 +90,22 @@
             font-size: 0.9em;
         }
 
-        /* Modern input field styling */
         .ister-input {
-            flex: 1;
-            padding: 15px;
+            padding: 8px 12px;
             border: 2px solid #e1e4e8;
             border-radius: 8px;
-            font-size: 1em;
-            resize: none;
+            font-size: 0.9em;
             transition: all 0.3s ease;
             background-color: #f8f9fa;
             color: #2c3e50;
-            line-height: 1.5;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            height: 35px;
+        }
+
+        textarea.ister-input {
+            height: 60px;
+            resize: none;
         }
 
         .ister-input:focus {
@@ -126,12 +115,40 @@
             background-color: #ffffff;
         }
 
-        .ister-input::placeholder {
-            color: #8795a1;
-            font-size: 0.95em;
+        .approve-button {
+            padding: 8px 16px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            align-self: flex-end;
         }
 
-        /* Panel headers styling */
+        .calculate-button {
+            padding: 8px 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            align-self: flex-end;
+        }
+
+        .approve-button:hover, .calculate-button:hover {
+            opacity: 0.9;
+        }
+
+        .approve-button:active, .calculate-button:active {
+            transform: translateY(1px);
+        }
+
         .panel-header {
             font-size: 1.5em;
             font-weight: 600;
@@ -141,7 +158,10 @@
             border-bottom: 2px solid #e1e4e8;
         }
 
-        /* Responsive design improvements */
+        .error {
+            border: 2px solid #dc3545;
+        }
+
         @media screen and (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -154,14 +174,6 @@
                 height: auto;
                 border: none;
                 box-shadow: none;
-            }
-
-            .ister-container {
-                gap: 20px;
-            }
-
-            .ister-item {
-                min-height: 120px;
             }
         }
     </style>
@@ -184,37 +196,183 @@
         <div class="right-panel">
             <div class="panel-content">
                 <div class="ister-container">
-                    <div class="ister-item">
+                    <div class="ister-item" id="ister1">
                         <label class="ister-label">1.İSTER</label>
-                        <textarea class="ister-input" placeholder="1. İster için giriş yapın..."></textarea>
+                        <input type="text" class="ister-input" id="idA" placeholder="ID A için giriş yapın...">
+                        <input type="text" class="ister-input" id="idB" placeholder="ID B için giriş yapın...">
+                        <button class="approve-button">Onayla</button>
                     </div>
-                    <div class="ister-item">
+                    <div class="ister-item" id="ister2">
                         <label class="ister-label">2.İSTER</label>
-                        <textarea class="ister-input" placeholder="2. İster için giriş yapın..."></textarea>
+                        <input type="text" class="ister-input" id="idC" placeholder="A ID için giriş yapın...">
+                        <button class="approve-button">Onayla</button>
                     </div>
-                    <div class="ister-item">
+                    <div class="ister-item" id="ister3">
                         <label class="ister-label">3.İSTER</label>
-                        <textarea class="ister-input" placeholder="3. İster için giriş yapın..."></textarea>
+                        <input type="text" class="ister-input" id="ister1ID" placeholder="1. İster ID'si...">
+
+                        <button class="approve-button">Onayla</button>
                     </div>
-                    <div class="ister-item">
+                    <div class="ister-item" id="ister4">
                         <label class="ister-label">4.İSTER</label>
-                        <textarea class="ister-input" placeholder="4. İster için giriş yapın..."></textarea>
+                        <input type="text" class="ister-input" id="idD" placeholder="ID D için giriş yapın...">
+
+                        <button class="approve-button">Onayla</button>
                     </div>
-                    <div class="ister-item">
+                    <div class="ister-item" id="ister5">
                         <label class="ister-label">5.İSTER</label>
-                        <textarea class="ister-input" placeholder="5. İster için giriş yapın..."></textarea>
+                        <input type="text" class="ister-input" id="idE" placeholder="ID E için giriş yapın...">
+
+                        <button class="approve-button">Onayla</button>
                     </div>
-                    <div class="ister-item">
+                    <div class="ister-item" id="ister6">
                         <label class="ister-label">6.İSTER</label>
-                        <textarea class="ister-input" placeholder="6. İster için giriş yapın..."></textarea>
+
+                        <button class="calculate-button">Hesapla</button>
                     </div>
-                    <div class="ister-item">
+                    <div class="ister-item" id="ister7">
                         <label class="ister-label">7.İSTER</label>
-                        <textarea class="ister-input" placeholder="7. İster için giriş yapın..."></textarea>
+                        <input type="text" class="ister-input" id="idF" placeholder="ID F için giriş yapın...">
+                        <button class="approve-button">Onayla</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Enhanced validation function with more robust error handling
+    function validateInputs(inputs, button, validationCallback = null) {
+        const isterItem = button.closest('.ister-item');
+        let isValid = true;
+
+        // Check if all inputs are non-empty
+        inputs.forEach(input => {
+            // Ensure the input exists before checking
+            if (input) {
+                if (input.value.trim() === '') {
+                    isValid = false;
+                    input.classList.add('error');
+                } else {
+                    input.classList.remove('error');
+                }
+            }
+        });
+
+        // If a custom validation callback is provided, use it
+        if (validationCallback) {
+            isValid = isValid && validationCallback();
+        }
+
+        // Toggle error state on the entire ister item
+        if (!isValid) {
+            isterItem.classList.add('error');
+            return false;
+        } else {
+            isterItem.classList.remove('error');
+            return true;
+        }
+    }
+
+    // Helper function to setup input validation
+    function setupInputValidation(inputs, button, validationCallback = null) {
+        // Ensure inputs is an array and filter out null inputs
+        inputs = inputs.filter(input => input !== null);
+
+        // Add event listeners to each input
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                // Remove error class when typing
+                input.classList.remove('error');
+
+                // Check if all inputs are now valid
+                const allInputsFilled = inputs.every(inp => inp.value.trim() !== '');
+
+                if (allInputsFilled) {
+                    const isterItem = button.closest('.ister-item');
+                    isterItem.classList.remove('error');
+                }
+            });
+
+            // Validate on Enter key
+            input.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    validateInputs(inputs, button, validationCallback);
+                }
+            });
+        });
+
+        // Validate on button click
+        button.addEventListener('click', function() {
+            validateInputs(inputs, button, validationCallback);
+        });
+    }
+
+    // 1. İster Validation (two inputs)
+    const ister1Inputs = [
+        document.getElementById('idA'),
+        document.getElementById('idB')
+    ];
+    const ister1Button = document.getElementById('ister1').querySelector('.approve-button');
+    setupInputValidation(ister1Inputs, ister1Button);
+
+    // 2. İster Validation (single input)
+    const ister2Inputs = [document.getElementById('idC')];
+    const ister2Button = document.getElementById('ister2').querySelector('.approve-button');
+    setupInputValidation(ister2Inputs, ister2Button);
+
+    // 3. İster Validation (requires 1. İster to be validated first)
+    const ister3Inputs = [document.getElementById('ister1ID')];
+    const ister3Button = document.getElementById('ister3').querySelector('.approve-button');
+    setupInputValidation(ister3Inputs, ister3Button, () => {
+        // Custom validation to ensure 1. İster is validated first
+        const firstIsterInputs = [
+            document.getElementById('idA'),
+            document.getElementById('idB')
+        ];
+
+        const firstIsterValid = firstIsterInputs.every(input => input.value.trim() !== '');
+
+        if (!firstIsterValid) {
+            // Highlight 1. İster if not validated
+            document.getElementById('ister1').classList.add('error');
+            firstIsterInputs.forEach(input => input.classList.add('error'));
+            return false;
+        }
+
+        return true;
+    });
+
+    // 4. İster Validation (two inputs)
+    const ister4Inputs = [
+        document.getElementById('idD'),
+        document.getElementById('ister4Text') // I added this assuming it exists
+    ];
+    const ister4Button = document.getElementById('ister4').querySelector('.approve-button');
+    setupInputValidation(ister4Inputs, ister4Button);
+
+    // 5. İster Validation (two inputs)
+    const ister5Inputs = [
+        document.getElementById('idE'),
+        document.getElementById('ister5Text') // I added this assuming it exists
+    ];
+    const ister5Button = document.getElementById('ister5').querySelector('.approve-button');
+    setupInputValidation(ister5Inputs, ister5Button);
+
+    // 6. İster Validation
+    const ister6Inputs = [document.getElementById('ister6Text')];
+    const ister6Button = document.getElementById('ister6').querySelector('.calculate-button');
+    setupInputValidation(ister6Inputs, ister6Button);
+
+    // 7. İster Validation (two inputs)
+    const ister7Inputs = [
+        document.getElementById('idF'),
+        document.getElementById('ister7Text') // I added this assuming it exists
+    ];
+    const ister7Button = document.getElementById('ister7').querySelector('.approve-button');
+    setupInputValidation(ister7Inputs, ister7Button);
+});
+    </script>
 </body>
 </html>
