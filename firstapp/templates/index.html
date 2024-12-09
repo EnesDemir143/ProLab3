@@ -442,8 +442,8 @@
                         <button class="approve-button">Onayla</button>
                     </div>
                 <div id="ister2" class="ister-item">
-                   <label class="ister-label">2.İSTER</label>
-                    <input type="text" id="idStartNode" class="ister-input" placeholder="Başlangıç Düğümü" value="A">
+                    <label class="ister-label">2.İSTER</label>
+                    <input type="text" id="idStartNode" class="ister-input" placeholder="Başlangıç Düğümü">
                     <button class="approve-button">Hesapla</button>
                 </div>
 
@@ -648,7 +648,7 @@ fetch('/ister7', {
 const ister7Button = document.querySelector('#ister7 .approve-button');
 ister7Button.addEventListener('click', () => {
     // Get the input value
-    const startNode = document.querySelector('#idF').value ; // Use input value or default to 'A'
+    const startNode = document.querySelector('#idF').value || 'A'; // Use input value or default to 'A'
 
     fetch('/ister7', {
     method: 'POST',

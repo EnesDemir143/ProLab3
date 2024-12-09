@@ -198,7 +198,7 @@
       <workItem from="1733653118594" duration="34000" />
       <workItem from="1733654486701" duration="486000" />
       <workItem from="1733693098297" duration="39000" />
-      <workItem from="1733693145260" duration="13541000" />
+      <workItem from="1733693145260" duration="16930000" />
     </task>
     <servers />
   </component>
@@ -206,7 +206,7 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ProLab3$_app.coverage" NAME=".app Coverage Results" MODIFIED="1733742477668" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/firstapp" />
+    <SUITE FILE_PATH="coverage/ProLab3$_app.coverage" NAME=".app Coverage Results" MODIFIED="1733756995181" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/firstapp" />
     <SUITE FILE_PATH="coverage/ProLab3$Main.coverage" NAME="Main Coverage Results" MODIFIED="1733738038828" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ProLab3$a.coverage" NAME="a Coverage Results" MODIFIED="1733740913471" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

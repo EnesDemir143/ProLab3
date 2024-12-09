@@ -46,8 +46,8 @@ def ister6():
 def ister2():
     start_node=request.form['start_node']
     with capture_output() as output:
-        for q in queue[start_node]:
-            heapPush(priority_Queue, len(priority_Queue), (queue[start_node][q], q))
+        for q in graph[start_node]:
+            heapPush(priority_Queue, len(priority_Queue), (graph[start_node][q], q))
         print(priority_Queue)
         while priority_Queue:
             yazar, value = heapPop(priority_Queue, len(priority_Queue), 0)
@@ -107,7 +107,7 @@ def ister1():
 @app.route('/ister7', methods=['POST'])
 def ister7():
     try:
-        start_node = request.form.get('start_node', 'A')  # Default to 'A' if not provided
+        start_node = request.form.get('start_node')  # Default to 'A' if not provided
 
         with capture_output() as output:
             current_path = dfs_longest_path(graph, start_node)
