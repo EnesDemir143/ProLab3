@@ -108,6 +108,32 @@ print(f"En kısa yol maliyeti: {maliyet}")
 print(f"Yol: {' -> '.join(yol)}")
 print(end-start)
 
+
+#Priority queue.
+queue={
+    "A":{
+        "B": 4,
+        "C": 2,
+        "D": 5,
+        "E": 10,
+        "F": 7,
+        "G": 3,
+        "H": 11,
+        "I": 9,
+    }
+}
+
+priority_Queue=[]
+for q in queue["A"]:
+    heapPush(priority_Queue,len(priority_Queue),(queue["A"][q],q))
+
+print(priority_Queue)
+while priority_Queue:
+    yazar,value=heapPop(priority_Queue,len(priority_Queue),0)
+    print(f"yazar: {yazar}, value: {value}")
+
+
+
 class Author:
     def __init__(self,name, id=0):
         self.name = name

@@ -6,11 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="7e1eb606-d47f-4e6c-b6ae-928a6dad1818" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Graphs.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Graphs.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/~$PROLAB 3 - DATASET.xlsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deneme.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/deneme.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/firstapp/.app.py" beforeDir="false" afterPath="$PROJECT_DIR$/firstapp/.app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/firstapp/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/firstapp/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,7 +173,7 @@
       <workItem from="1733653118594" duration="34000" />
       <workItem from="1733654486701" duration="486000" />
       <workItem from="1733693098297" duration="39000" />
-      <workItem from="1733693145260" duration="313000" />
+      <workItem from="1733693145260" duration="1747000" />
     </task>
     <servers />
   </component>
@@ -185,6 +182,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ProLab3$_app.coverage" NAME=".app Coverage Results" MODIFIED="1733569186372" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/firstapp" />
-    <SUITE FILE_PATH="coverage/ProLab3$Main.coverage" NAME="Main Coverage Results" MODIFIED="1733558249954" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ProLab3$Main.coverage" NAME="Main Coverage Results" MODIFIED="1733693395541" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
