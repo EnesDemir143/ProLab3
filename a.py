@@ -1,0 +1,3 @@
+from Main import en_cok_isbirligi_yapan_yazari_bul, graph
+
+en_cok_isbirligi_yapan_yazari_bul(graph)

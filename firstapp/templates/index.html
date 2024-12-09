@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enhanced Three Column Layout</title>
     <style>
-        /* Previous styles remain the same */
         * {
             margin: 0;
             padding: 0;
@@ -89,6 +88,52 @@
             text-transform: uppercase;
             font-size: 0.9em;
         }
+        .step {
+        background-color: #f1f3f5;
+        margin: 5px 0;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+        color: #333;
+    }
+        /* Enhanced output card for İSTER 6 */
+.output-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 15px;
+    font-size: 1.1em;
+    color: #333;
+    line-height: 1.6;
+    transition: transform 0.3s ease;
+}
+
+.output-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Error message box */
+.error-box {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+/* Heading of the output area */
+#enes h3 {
+    font-size: 1.4em;
+    font-weight: 600;
+    color: #1a73e8;
+    margin-bottom: 15px;
+}
+
 
         .ister-input {
             padding: 8px 12px;
@@ -114,7 +159,43 @@
             box-shadow: 0 0 0 3px rgba(26,115,232,0.2);
             background-color: #ffffff;
         }
+        /* Style for the output card */
+.output-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
+/* Style for the path details container */
+.path-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Style for each individual path detail box */
+.path-detail {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Optional: Style the headers for better clarity */
+.path-detail strong {
+    display: block;
+    font-size: 16px;
+    color: #333;
+}
+
+
+        #enes p {
+            font-size: 0.5em; /* Çıktı kısmındaki yazıyı küçültme */
+        }
         .approve-button {
             padding: 8px 16px;
             background-color: #1a73e8;
@@ -128,18 +209,176 @@
             align-self: flex-end;
         }
 
-        .calculate-button {
-            padding: 8px 16px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-top: 8px;
-            align-self: flex-end;
-        }
+/* Button hover effect for İSTER 6 */
+.calculate-button {
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+    align-self: flex-end;
+}
+
+.calculate-button:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+.calculate-button:active {
+    transform: translateY(1px);
+}
+/* Hover effect for all results in İSTER 1 */
+.ister-item:hover {
+    transform: translateY(-5px) translateZ(10px); /* Move forward and upward */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    transition: all 0.3s ease;
+}
+
+/* Hover effect for output steps in İSTER 1 (the output steps or results) */
+.step:hover {
+    transform: translateY(-5px) translateZ(10px); /* Move forward on hover */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    transition: all 0.3s ease;
+}
+
+/* Hover effect for input fields inside İSTER 1 results */
+.ister-input:hover {
+    border-color: #1a73e8; /* Border color change */
+    box-shadow: 0 0 0 3px rgba(26,115,232,0.2); /* Glow effect */
+    background-color: #ffffff; /* Background change on hover */
+}
+
+/* Hover effect for buttons inside İSTER 1 */
+.approve-button:hover {
+    opacity: 0.9; /* Slightly transparent on hover */
+    transform: scale(1.05); /* Slight scale effect */
+}
+
+.approve-button:active {
+    transform: translateY(1px); /* Button press effect */
+}
+/* Main output card container */
+.output-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    margin-top: 10px;
+}
+
+/* Container for path details */
+.path-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Individual path detail boxes */
+.path-detail {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 10px;
+    transition: transform 0.2s ease;
+}
+
+/* Styling for the headers within path details */
+.path-detail strong {
+    display: block;
+    color: #1a73e8;
+    font-size: 0.75em;  /* Reduced font size for headers */
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 4px;
+}
+
+/* Content styling within path details */
+.path-detail br + text {
+    font-size: 0.85em;  /* Reduced font size for content */
+    color: #2c3e50;
+    line-height: 1.4;
+}
+
+/* Regular text within path details */
+.path-detail {
+    font-size: 0.85em;  /* Reduced font size for all text */
+}
+
+/* Header styling for the output panel */
+#enes h3 {
+    font-size: 1em;  /* Reduced font size for main header */
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+/* Hover effect */
+.path-detail:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Error box styling */
+.error-box {
+    background-color: #fff3f3;
+    border: 1px solid #ffcdd2;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+    color: #d32f2f;
+    font-size: 0.85em;  /* Reduced font size for errors */
+}
+
+/* Animation for new content */
+.path-detail {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hover effect for all results in İSTER 1 */
+.ister-item:hover {
+    transform: translateY(-5px) translateZ(10px); /* Move forward and upward */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    transition: all 0.3s ease;
+}
+
+/* Hover effect for input fields inside İSTER 1 results */
+.ister-input:hover {
+    border-color: #1a73e8; /* Border color change */
+    box-shadow: 0 0 0 3px rgba(26,115,232,0.2); /* Glow effect */
+    background-color: #ffffff; /* Background change on hover */
+}
+
+/* Hover effect for buttons inside İSTER 1 */
+.approve-button:hover {
+    opacity: 0.9; /* Slightly transparent on hover */
+    transform: scale(1.05); /* Slight scale effect */
+}
+
+.approve-button:active {
+    transform: translateY(1px); /* Button press effect */
+}
+
 
         .approve-button:hover, .calculate-button:hover {
             opacity: 0.9;
@@ -182,7 +421,7 @@
     <div class="container">
         <div class="left-panel">
             <div class="panel-content">
-                <h2 class="panel-header">ÇIKTI EKRANI</h2>
+                <h2 class="panel-header" id="enes">ÇIKTI EKRANI</h2>
             </div>
         </div>
 
@@ -210,30 +449,26 @@
                     <div class="ister-item" id="ister3">
                         <label class="ister-label">3.İSTER</label>
                         <input type="text" class="ister-input" id="ister1ID" placeholder="1. İster ID'si...">
-
                         <button class="approve-button">Onayla</button>
                     </div>
                     <div class="ister-item" id="ister4">
                         <label class="ister-label">4.İSTER</label>
                         <input type="text" class="ister-input" id="idD" placeholder="ID D için giriş yapın...">
-
                         <button class="approve-button">Onayla</button>
                     </div>
                     <div class="ister-item" id="ister5">
                         <label class="ister-label">5.İSTER</label>
                         <input type="text" class="ister-input" id="idE" placeholder="ID E için giriş yapın...">
-
                         <button class="approve-button">Onayla</button>
                     </div>
                     <div class="ister-item" id="ister6">
-                        <label class="ister-label">6.İSTER</label>
-
+                        <label class="ister-label">6. İSTER</label>
                         <button class="calculate-button">Hesapla</button>
                     </div>
                     <div class="ister-item" id="ister7">
-                        <label class="ister-label">7.İSTER</label>
-                        <input type="text" class="ister-input" id="idF" placeholder="ID F için giriş yapın...">
-                        <button class="approve-button">Onayla</button>
+                    <label class="ister-label">7. İSTER</label>
+                    <input type="text" class="ister-input" id="idF" placeholder="ID F için giriş yapın...">
+                    <button class="approve-button">Onayla</button>
                     </div>
                 </div>
             </div>
@@ -241,138 +476,248 @@
     </div>
 
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Enhanced validation function with more robust error handling
-    function validateInputs(inputs, button, validationCallback = null) {
-        const isterItem = button.closest('.ister-item');
-        let isValid = true;
 
-        // Check if all inputs are non-empty
-        inputs.forEach(input => {
-            // Ensure the input exists before checking
-            if (input) {
-                if (input.value.trim() === '') {
-                    isValid = false;
-                    input.classList.add('error');
-                } else {
-                    input.classList.remove('error');
-                }
-            }
-        });
 
-        // If a custom validation callback is provided, use it
-        if (validationCallback) {
-            isValid = isValid && validationCallback();
-        }
-
-        // Toggle error state on the entire ister item
-        if (!isValid) {
-            isterItem.classList.add('error');
-            return false;
-        } else {
-            isterItem.classList.remove('error');
-            return true;
-        }
-    }
-
-    // Helper function to setup input validation
-    function setupInputValidation(inputs, button, validationCallback = null) {
-        // Ensure inputs is an array and filter out null inputs
-        inputs = inputs.filter(input => input !== null);
-
-        // Add event listeners to each input
-        inputs.forEach(input => {
-            input.addEventListener('input', function() {
-                // Remove error class when typing
-                input.classList.remove('error');
-
-                // Check if all inputs are now valid
-                const allInputsFilled = inputs.every(inp => inp.value.trim() !== '');
-
-                if (allInputsFilled) {
-                    const isterItem = button.closest('.ister-item');
-                    isterItem.classList.remove('error');
-                }
+        // Onaylama işlevselliği
+        function setupInputValidation(inputs, button, validationCallback) {
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    if (validationCallback(inputs)) {
+                        button.disabled = false;
+                    } else {
+                        button.disabled = true;
+                    }
+                });
             });
-
-            // Validate on Enter key
-            input.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    validateInputs(inputs, button, validationCallback);
-                }
-            });
-        });
-
-        // Validate on button click
-        button.addEventListener('click', function() {
-            validateInputs(inputs, button, validationCallback);
-        });
-    }
-
-    // 1. İster Validation (two inputs)
-    const ister1Inputs = [
-        document.getElementById('idA'),
-        document.getElementById('idB')
-    ];
-    const ister1Button = document.getElementById('ister1').querySelector('.approve-button');
-    setupInputValidation(ister1Inputs, ister1Button);
-
-    // 2. İster Validation (single input)
-    const ister2Inputs = [document.getElementById('idC')];
-    const ister2Button = document.getElementById('ister2').querySelector('.approve-button');
-    setupInputValidation(ister2Inputs, ister2Button);
-
-    // 3. İster Validation (requires 1. İster to be validated first)
-    const ister3Inputs = [document.getElementById('ister1ID')];
-    const ister3Button = document.getElementById('ister3').querySelector('.approve-button');
-    setupInputValidation(ister3Inputs, ister3Button, () => {
-        // Custom validation to ensure 1. İster is validated first
-        const firstIsterInputs = [
-            document.getElementById('idA'),
-            document.getElementById('idB')
-        ];
-
-        const firstIsterValid = firstIsterInputs.every(input => input.value.trim() !== '');
-
-        if (!firstIsterValid) {
-            // Highlight 1. İster if not validated
-            document.getElementById('ister1').classList.add('error');
-            firstIsterInputs.forEach(input => input.classList.add('error'));
-            return false;
         }
 
-        return true;
+        // Giriş doğrulama
+        function validateInputs(inputs) {
+            return inputs.every(input => input.value.trim() !== '');
+        }
+
+// Butonları etkileşimli hale getirme
+const buttons = document.querySelectorAll('.approve-button');
+buttons.forEach(button => {
+    const inputs = button.closest('.ister-item').querySelectorAll('.ister-input');
+
+    // Before performing action, clear the output below the "Çıktı:" header
+    button.addEventListener('click', () => {
+        const outputPanel = document.querySelector('#enes'); // Left panel output section
+
+        // Find and clear the content below the header
+        const outputContent = outputPanel.querySelector('p');
+        if (outputContent) {
+            outputContent.remove(); // Remove the paragraph or output below the header
+        }
+
+        // Then perform the normal button action
+        setupInputValidation(inputs, button, validateInputs);
     });
-
-    // 4. İster Validation (two inputs)
-    const ister4Inputs = [
-        document.getElementById('idD'),
-        document.getElementById('ister4Text') // I added this assuming it exists
-    ];
-    const ister4Button = document.getElementById('ister4').querySelector('.approve-button');
-    setupInputValidation(ister4Inputs, ister4Button);
-
-    // 5. İster Validation (two inputs)
-    const ister5Inputs = [
-        document.getElementById('idE'),
-        document.getElementById('ister5Text') // I added this assuming it exists
-    ];
-    const ister5Button = document.getElementById('ister5').querySelector('.approve-button');
-    setupInputValidation(ister5Inputs, ister5Button);
-
-    // 6. İster Validation
-    const ister6Inputs = [document.getElementById('ister6Text')];
-    const ister6Button = document.getElementById('ister6').querySelector('.calculate-button');
-    setupInputValidation(ister6Inputs, ister6Button);
-
-    // 7. İster Validation (two inputs)
-    const ister7Inputs = [
-        document.getElementById('idF'),
-        document.getElementById('ister7Text') // I added this assuming it exists
-    ];
-    const ister7Button = document.getElementById('ister7').querySelector('.approve-button');
-    setupInputValidation(ister7Inputs, ister7Button);
 });
+
+// Button click for 1st "İSTER"
+const ister1Button = document.querySelector('#ister1 .approve-button');
+ister1Button.addEventListener('click', () => {
+    // Get the input values for start_node and end_node
+    const startNode = document.querySelector('#idA').value;
+    const endNode = document.querySelector('#idB').value;
+
+    // Fetch the output for /ister1 route
+    fetch('/ister1', {
+        method: 'POST',
+        body: new URLSearchParams({
+            start_node: startNode,
+            end_node: endNode
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Sunucudan geçersiz yanıt alındı');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const outputPanel = document.querySelector('#enes'); // Left panel output section
+
+        if (data.output) {
+            // Clear previous output and display the new one
+            outputPanel.innerHTML = `<h3>Çıktı Ekranı:</h3>`;
+            const steps = data.output.split("\n"); // Output split by newlines (steps)
+
+            steps.forEach(step => {
+                const stepDiv = document.createElement('div');
+                stepDiv.classList.add('step');  // You can style each step using this class
+                stepDiv.innerHTML = `<p>${step}</p>`; // Add each step in a paragraph
+                outputPanel.appendChild(stepDiv);
+            });
+        } else if (data.error) {
+            // Display error message
+            outputPanel.innerHTML = `<h3>Hata:</h3><p>${data.error}</p>`;
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        alert('Bir hata oluştu.');
+    });
+});
+
+
+
+const calculateButton = document.querySelector('.calculate-button');
+calculateButton.addEventListener('click', () => {
+    fetch('/ister6', { method: 'POST' })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Sunucudan geçersiz yanıt alındı');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const outputPanel = document.querySelector('#enes');
+            outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+
+            if (data.output) {
+                const outputCard = document.createElement('div');
+                outputCard.classList.add('output-card');
+
+                const pathDetails = document.createElement('div');
+                pathDetails.classList.add('path-details');
+
+                // Çıktıyı satırlara böl
+                const outputLines = data.output.split('\n');
+
+                // En kısa yollar listesi için div
+                if (outputLines[0]) {
+                    const pathsDiv = document.createElement('div');
+                    pathsDiv.classList.add('path-detail');
+                    pathsDiv.innerHTML = `<strong>En Kısa Yollar:</strong><br>${outputLines[0].replace('En kısa yollar:', '')}`;
+                    pathDetails.appendChild(pathsDiv);
+                }
+
+                // Toplam uzunluk için div
+                if (outputLines[1]) {
+                    const lengthDiv = document.createElement('div');
+                    lengthDiv.classList.add('path-detail');
+                    lengthDiv.innerHTML = `<strong>Toplam Uzunluk:</strong><br>${outputLines[1].replace('Toplam uzunluk:', '')}`;
+                    pathDetails.appendChild(lengthDiv);
+                }
+
+                outputCard.appendChild(pathDetails);
+                outputPanel.appendChild(outputCard);
+            } else if (data.error) {
+                const errorBox = document.createElement('div');
+                errorBox.classList.add('error-box');
+                errorBox.innerHTML = `<p><strong>Hata:</strong> ${data.error}</p>`;
+                outputPanel.appendChild(errorBox);
+            }
+        })
+        .catch(error => {
+            console.error('Hata:', error);
+            const outputPanel = document.querySelector('#enes');
+            outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+            const errorBox = document.createElement('div');
+            errorBox.classList.add('error-box');
+            errorBox.innerHTML = `<p><strong>Hata:</strong> ${error.message}</p>`;
+            outputPanel.appendChild(errorBox);
+        });
+});
+fetch('/ister7', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+        'start_node': 'A'  // Replace with your starting node
+    })
+})
+.then(response => response.json())
+.then(data => {
+    if (data.success) {
+        console.log(data.output);
+        // Update your UI with the output
+    } else {
+        console.error(data.error);
+        // Handle the error in your UI
+    }
+})
+.catch(error => console.error('Error:', error));
+// Button click for 7th "İSTER"
+// Button click for 7th "İSTER"
+const ister7Button = document.querySelector('#ister7 .approve-button');
+ister7Button.addEventListener('click', () => {
+    // Get the input value
+    const startNode = document.querySelector('#idF').value || 'A'; // Use input value or default to 'A'
+
+    fetch('/ister7', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+        start_node: startNode
+    })
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Sunucudan geçersiz yanıt alındı');
+    }
+    return response.json();
+})
+.then(data => {
+    const outputPanel = document.querySelector('#enes');
+    outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+
+    console.log('Received data:', data);
+
+    if (data && data.output) {
+        const outputCard = document.createElement('div');
+        outputCard.classList.add('output-card');
+
+        const pathDetails = document.createElement('div');
+        pathDetails.classList.add('path-details');
+
+        // Çıktıyı satırlara böl
+        const outputLines = data.output.split('\n');
+
+        // En uzun yol için div
+        if (outputLines[0]) {
+            const pathDiv = document.createElement('div');
+            pathDiv.classList.add('path-detail');
+            pathDiv.innerHTML = `<strong>En Uzun Yol:</strong><br>${outputLines[0].replace('En uzun yol: ', '')}`;
+            pathDetails.appendChild(pathDiv);
+        }
+
+        // Yol uzunluğu için div
+        if (outputLines[1]) {
+            const lengthDiv = document.createElement('div');
+            lengthDiv.classList.add('path-detail');
+            lengthDiv.innerHTML = `<strong>Yol Uzunluğu:</strong><br>${outputLines[1].replace('Yol uzunluğu: ', '')}`;
+            pathDetails.appendChild(lengthDiv);
+        }
+
+        outputCard.appendChild(pathDetails);
+        outputPanel.appendChild(outputCard);
+    } else {
+        const errorBox = document.createElement('div');
+        errorBox.classList.add('error-box');
+        errorBox.innerHTML = `<p><strong>Hata:</strong> Sunucudan beklenen veri alınamadı. Alınan veri: ${JSON.stringify(data)}</p>`;
+        outputPanel.appendChild(errorBox);
+    }
+})
+.catch(error => {
+    console.error('Hata:', error);
+    const outputPanel = document.querySelector('#enes');
+    outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+    const errorBox = document.createElement('div');
+    errorBox.classList.add('error-box');
+    errorBox.innerHTML = `<p><strong>Hata:</strong> ${error.message}</p>`;
+    outputPanel.appendChild(errorBox);
+});
+});
+
+
+
     </script>
 </body>
 </html>
