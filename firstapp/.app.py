@@ -4,7 +4,8 @@ import sys
 from io import StringIO
 
 from flask import Flask, render_template, request, jsonify
-from Main import dijkstra, dfs_longest_path, en_cok_isbirligi_yapan_yazari_bul, graph
+from Main import dijkstra, dfs_longest_path, en_cok_isbirligi_yapan_yazari_bul, graph, queue, heapPush, priority_Queue, \
+    heapPop
 
 app = Flask(__name__, template_folder='templates')
 
@@ -43,8 +44,23 @@ def ister6():
 
 @app.route('/ister2', methods=['POST'])
 def ister2():
-    # 2. ister için gerekli parametreleri alıp işlemleri yapacak
-    return jsonify({'success': True})
+    start_node=request.form['start_node']
+    with capture_output() as output:
+        for q in queue[start_node]:
+            heapPush(priority_Queue, len(priority_Queue), (queue[start_node][q], q))
+        print(priority_Queue)
+        while priority_Queue:
+            yazar, value = heapPop(priority_Queue, len(priority_Queue), 0)
+            print(f"yazar: {yazar}, value: {value}")
+    output_text = output.getvalue().strip()
+    if not output_text:
+        return jsonify({'error': 'Çıktı üretilemedi.'}), 500
+    response = app.response_class(
+        response=json.dumps({'output': output_text}, ensure_ascii=False),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
 
 
 @app.route('/ister3', methods=['POST'])
