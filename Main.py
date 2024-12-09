@@ -89,6 +89,40 @@ def dijkstra(graph, src, dest):
 
     return "Yol yok", [],history
 
+def dfs_longest_path(graph, start_node, visited=None):
+    if visited is None:
+        visited = set()
+
+    visited.add(start_node)
+    max_path = [start_node]
+
+    for neighbor in graph[start_node]:
+        if neighbor not in visited:
+            current_path = dfs_longest_path(graph, neighbor, visited.copy()) #Her yolı zaten kod aslında dönücek.Bu visited amacı sadece o yolda döngüye girmemesini sağlamak.
+
+            candidate_path = [start_node] + current_path
+
+            if len(candidate_path) > len(max_path):
+                max_path = candidate_path
+
+    return max_path
+
+def en_cok_isbirligi_yapan_yazari_bul(graph):
+
+    en_fazla_isbirligi = 0
+    en_cok_isbirligi_yapan_yazar = None
+
+
+    for yazar, ortak_yazarlar in graph.items():
+        ortak_yazar_sayisi = len(ortak_yazarlar)
+
+
+        if ortak_yazar_sayisi > en_fazla_isbirligi:
+            en_fazla_isbirligi = ortak_yazar_sayisi
+            en_cok_isbirligi_yapan_yazar = yazar
+
+    return (en_cok_isbirligi_yapan_yazar, en_fazla_isbirligi)
+
 
 graph = {
     'A': {'B': 4, 'C': 2},
@@ -107,6 +141,24 @@ for i, step in enumerate(history, 1):
 print(f"En kısa yol maliyeti: {maliyet}")
 print(f"Yol: {' -> '.join(yol)}")
 print(end-start)
+
+graph = {
+    'A': {'B': 4, 'C': 2},
+    'B': {'A': 4, 'C': 1, 'D': 5},
+    'C': {'A': 2, 'B': 1, 'D': 8, 'E': 10},
+    'D': {'B': 5, 'C': 8, 'E': 2},
+    'E': {'C': 10, 'D': 2},
+}
+
+
+print(list(graph["A"].keys()))
+
+current_path = dfs_longest_path(graph, 'A')
+print(f"Longest path: {current_path}")
+print(f"Path length: {len(current_path)}")
+
+x,y=en_cok_isbirligi_yapan_yazari_bul(graph)
+print("En çok iş birliği yapan yazar:{}  || İş birliği sayısı:{}".format(x,y))
 
 
 #Priority queue.
