@@ -62,7 +62,8 @@ class BST:
             current = current.left
         return current
 
-    # Ağaç yapısını grafiksel olarak gösterme
+
+    # grafik gösterim kısmı
     def visualize(self):
         G = nx.DiGraph()
         pos = {}
@@ -82,22 +83,22 @@ class BST:
         nx.draw(G, pos, with_labels=True, node_color="lightblue", node_size=2000, font_size=10, font_weight="bold")
         plt.show()
 
-# Kuyruktaki yazarlar
+
 author_queue = [5, 3, 8, 2, 4, 7, 9]
 
-# BST oluşturma ve kuyruktaki yazarlardan ağacı doldurma
+
 bst = BST()
 for author_id in author_queue:
     bst.insert(author_id)
 
-# İlk hali göster
+
 print("Başlangıç ağacı:")
 bst.visualize()
 
-# Kullanıcıdan bir yazar ID'si al ve ağacı güncelle
+
 author_to_remove = int(input("Ağaçtan silmek istediğiniz yazar ID'sini girin: "))
 bst.delete(author_to_remove)
 
-# Son hali göster
+
 print("Güncellenmiş ağaç:")
 bst.visualize()
