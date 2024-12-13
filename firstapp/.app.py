@@ -5,7 +5,7 @@ from io import StringIO
 
 from flask import Flask, render_template, request, jsonify
 from Main import dijkstra, dfs_longest_path, en_cok_isbirligi_yapan_yazari_bul, graph, queue, heapPush, priority_Queue, \
-    heapPop
+    heapPop, visualize_graph, collaboration_graph
 
 app = Flask(__name__, template_folder='templates')
 
@@ -126,6 +126,24 @@ def ister7():
             'success': False,
             'output': f'Hata oluştu: {str(e)}'
         })
+
+
+@app.route("/get_graph_data", methods=["GET"])
+def get_graph_data():
+    nodes = []
+    links = []
+
+    # collaboration_graph üzerinden yazarlar ve işbirlikçileri al
+    for author, collaborators in collaboration_graph.items():
+        # Yazarları ve işbirlikçilerini JSON formatında hazırlayın
+        author_label = f"{author.name.split()[0][0]}_{author.name.split()[-1]}_{author.orcid}"
+        for collaborator, weight in collaborators.items():
+            collab_label = f"{collaborator.name.split()[0][0]}_{collaborator.name.split()[-1]}_{collaborator.orcid}"
+            links.append({"source": author_label, "target": collab_label, "weight": weight})
+
+        nodes.append({"id": author_label, "full_name": author.name, "orcid": author.orcid})
+
+    return jsonify({"nodes": nodes, "links": links})
 
 
 if __name__ == '__main__':

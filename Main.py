@@ -188,27 +188,11 @@ while priority_Queue:
     print(f"yazar: {yazar}, value: {value}")
 
 
-
-class Article:
-    def __init__(self, doi, name, coauthors):
-        self.doi = doi
-        self.name = name
-        self.coauthors = set(coauthors)  # Using set to prevent duplicate coauthors
-
-
-class Author:
-    def __init__(self, orcid, name):
-        self.orcid = orcid
-        self.name = name
-        self.articles = set()  # Using set to prevent duplicate articles
-
 def build_author_graph(df):
-    # Dictionaries to store mappings
-    orcid_to_author = {}  # Maps ORCID to Author object
-    name_to_author = {}   # Maps name to Author object
+    orcid_to_author = {}
+    name_to_author = {}
     collaboration_graph = defaultdict(lambda: defaultdict(int))
 
-    # First pass: Create Author objects
     for orcid, name in zip(df["orcid"], df["author_name"]):
         name = name.strip()
         orcid = orcid.strip()
@@ -216,32 +200,37 @@ def build_author_graph(df):
         if orcid not in orcid_to_author:
             author = Author(orcid, name)
             orcid_to_author[orcid] = author
-            name_to_author[name] = author
+            name_to_author[name] = author #aynı adda olanlarda burada her eklenen nesne bir öncekini eziyor.
+            collaboration_graph[author] = {}
 
-        collaboration_graph[author] = {}
-
-    # Second pass: Create Articles and build collaboration graph
     for row in df.itertuples():
         orcid = row.orcid.strip()
         main_author = orcid_to_author[orcid]
 
-        # Parse coauthors
         coauthors = row.coauthors.strip('[]').replace("'", "").split(',')
         coauthors = [name.strip() for name in coauthors]
 
-        # Remove the main author from coauthors list
         if len(coauthors) > 1:
             coauthors.pop(row.author_position - 1)
 
-        # Create article
         article = Article(row.doi, row.paper_title, coauthors)
         main_author.articles.add(article)
 
-        # Update collaboration graph
+    for row in df.itertuples():
+        orcid = row.orcid.strip()
+        main_author = orcid_to_author[orcid]
+
+        coauthors = row.coauthors.strip('[]').replace("'", "").split(',')
+        coauthors = [name.strip() for name in coauthors]
+
+        if len(coauthors) > 1:
+            coauthors.pop(row.author_position - 1)
+
+        # Collaboration graph'ı güncelle
         for coauthor_name in coauthors:
             if coauthor_name in name_to_author:
-                coauthor = name_to_author[coauthor_name]
-                if coauthor.orcid != main_author.orcid:  # Prevent self-loops
+                coauthor = name_to_author[coauthor_name] ##en son olan nesneyi tutar o ad la.
+                if coauthor.orcid != main_author.orcid:
                     collaboration_graph[main_author][coauthor] = collaboration_graph[main_author].get(coauthor, 0) + 1
                     collaboration_graph[coauthor][main_author] = collaboration_graph[coauthor].get(main_author, 0) + 1
 
@@ -278,6 +267,7 @@ def print_graph_statistics(orcid_to_author, collaboration_graph):
     print("\nIsolated Authors:")
     for author in isolated_authors:
         print(f"- {author.name} ({author.orcid})")
+
 
 
 def visualize_graph(collaboration_graph, title="Collaboration Network"):
@@ -356,11 +346,9 @@ def visualize_graph(collaboration_graph, title="Collaboration Network"):
 
 # Not forgetting to set matplotlib to use tight layout
 plt.tight_layout()
+# Assuming df is your pandas DataFrame
+orcid_to_author, name_to_author, collaboration_graph = build_author_graph(df)
+print_graph_statistics(orcid_to_author, collaboration_graph)
 
-if __name__ == "__main__":
-    # Assuming df is your pandas DataFrame
-    orcid_to_author, name_to_author, collaboration_graph = build_author_graph(df)
-    print_graph_statistics(orcid_to_author, collaboration_graph)
-
-    G, plt = visualize_graph(collaboration_graph, "Author Collaboration Network")
-    plt.show()
+G, plt = visualize_graph(collaboration_graph, "Author Collaboration Network")
+plt.show()

@@ -426,9 +426,10 @@
         </div>
 
         <div class="center-panel">
-            <div class="panel-content">
+
+            <div class="container">
                 <h2 class="panel-header">Main Content Area</h2>
-                <p>{{ author_name }}</p>
+                <div id="graph"></div>
             </div>
         </div>
 
@@ -773,7 +774,86 @@ ister2Button.addEventListener('click', () => {
         outputPanel.appendChild(errorBox);
     });
 });
+function createGraph(graphData) {
+            const width = 800;
+            const height = 600;
 
+            // SVG alanı oluştur
+            const svg = d3.select("#graph")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            // Düğüm ve kenar verilerini al
+            const nodes = graphData.nodes;
+            const links = graphData.links;
+
+            // Force Simulation
+            const simulation = d3.forceSimulation(nodes)
+                .force("link", d3.forceLink(links).id(d => d.id))
+                .force("charge", d3.forceManyBody().strength(-200))
+                .force("center", d3.forceCenter(width / 2, height / 2));
+
+            // Kenarları oluştur
+            const link = svg.append("g")
+                .selectAll(".link")
+                .data(links)
+                .enter().append("line")
+                .attr("class", "link");
+
+            // Düğümleri oluştur
+            const node = svg.append("g")
+                .selectAll(".node")
+                .data(nodes)
+                .enter().append("circle")
+                .attr("class", "node")
+                .attr("r", 10)
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+
+            // Düğüm etiketlerini oluştur
+            node.append("title")
+                .text(d => d.full_name);
+
+            // Düğüm pozisyonlarını güncelle
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+            });
+
+            // Düğüm sürükleme işlemleri
+            function dragstarted(event) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                event.subject.fx = event.subject.x;
+                event.subject.fy = event.subject.y;
+            }
+
+            function dragged(event) {
+                event.subject.fx = event.x;
+                event.subject.fy = event.y;
+            }
+
+            function dragended(event) {
+                if (!event.active) simulation.alphaTarget(0);
+                event.subject.fx = null;
+                event.subject.fy = null;
+            }
+        }
+
+        // Flask API'den grafik verisini çek
+        fetch('/get_graph_data')
+            .then(response => response.json())
+            .then(data => createGraph(data))
+            .catch(error => console.error('Hata:', error));
 
     </script>
 </body>
