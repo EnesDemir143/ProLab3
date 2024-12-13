@@ -9,14 +9,13 @@ from Isterler1.Ister1 import Ister1
 from Isterler1.Ister6 import Ister6
 from Isterler1.Ister7 import  Ister7
 from flask import Flask, render_template, request, jsonify
+
+from ReadData.data import df
+
 # from ExFiles.Main import dijkstra, dfs_longest_path, en_cok_isbirligi_yapan_yazari_bul, graph, heapPush, priority_Queue, \
 #     heapPop, collaboration_graph
 
-# Flask uygulaması başlamadan önce
-orcid_to_author, name_to_author, collaboration_graph = Graph.build_author_graph(df)
 
-# collaboration_graph sınıf düzeyinde bir değişken olarak saklanıyor
-Graph.collaboration_graph = collaboration_graph
 
 app = Flask(__name__, template_folder='templates')
 
@@ -142,16 +141,34 @@ def ister7():
 
 @app.route("/get_graph_data", methods=["GET"])
 def get_graph_data():
+    # Flask uygulaması başlamadan önce
+    orcid_to_author, name_to_author, collaboration_graph = Graph.build_author_graph(df)
+
+    # collaboration_graph sınıf düzeyinde bir değişken olarak saklanıyor
+    Graph.collaboration_graph = collaboration_graph
     nodes = []
     links = []
 
-    # collaboration_graph üzerinden yazarlar ve işbirlikçileri al
     for author, collaborators in Graph.collaboration_graph.items():
-        # Yazarları ve işbirlikçilerini JSON formatında hazırlayın
-        author_label = f"{author.name.split()[0][0]}_{author.name.split()[-1]}_{author.orcid}"
+        # Yazar adını kontrol edin
+        if not author.name:
+            print(f"Warning: Author with ORCID {author.orcid} has no name.")
+            continue  # Bu yazarı atlayabilirsiniz
+
+        try:
+            # Ad soyad formatını oluştur
+            author_label = f"{author.name.split()[0][0]}_{author.name.split()[-1]}_{author.orcid}"
+        except IndexError:
+            print(f"Error: Unable to process author name {author.name} with ORCID {author.orcid}.")
+            continue  # Hatalı yazarı atla
+
         for collaborator, weight in collaborators.items():
-            collab_label = f"{collaborator.name.split()[0][0]}_{collaborator.name.split()[-1]}_{collaborator.orcid}"
-            links.append({"source": author_label, "target": collab_label, "weight": weight})
+            try:
+                collab_label = f"{collaborator.name.split()[0][0]}_{collaborator.name.split()[-1]}_{collaborator.orcid}"
+                links.append({"source": author_label, "target": collab_label, "weight": weight})
+            except IndexError:
+                print(f"Error: Unable to process collaborator {collaborator.name} with ORCID {collaborator.orcid}.")
+                continue
 
         nodes.append({"id": author_label, "full_name": author.name, "orcid": author.orcid})
 

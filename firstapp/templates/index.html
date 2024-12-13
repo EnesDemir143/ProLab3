@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enhanced Three Column Layout</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -415,6 +416,101 @@
                 box-shadow: none;
             }
         }
+                #graphSVG {
+            width: 100%;
+            height: 600px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+                #graphContainer {
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
+        }
+        #graphSVG {
+            width: 100%;
+            height: 100%;
+        }
+        .node {
+            cursor: pointer;
+            fill: lightblue;
+        }
+        .link {
+            stroke: #888;
+            stroke-width: 2px;
+            opacity: 0.7;
+        }
+        .label {
+            font-size: 12px;
+            fill: black;
+            pointer-events: none;
+        }
+
+/* Styling for the center panel */
+/* Styling for the center panel (Full screen layout) */
+.center-panel {
+    display: flex;
+    justify-content: center;   /* Horizontally center the content */
+    align-items: center;       /* Vertically center the content */
+    height: 100vh;             /* Full height of the viewport */
+    overflow: hidden;
+    padding: 0;
+}
+
+/* Styling for the graph container */
+#graphContainer {
+    width: 100%;               /* Full width */
+    height: 100%;              /* Full height */
+    position: relative;        /* Allows positioning of zoom controls */
+    background-color: #fff;
+}
+
+/* Styling for zoom buttons (optional positioning) */
+.zoom-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+.zoom-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.zoom-button:hover {
+    background-color: #0056b3;
+}
+
+/* Optional loading message styling */
+#loading {
+    font-size: 18px;
+    color: gray;
+    margin-top: 20px;
+}
+#graphContainer {
+    width: 100%;
+    height: 100vh; /* Yüksekliği tüm ekran yapar */
+    overflow: hidden;
+    position: relative;
+}
+
+#graphSVG {
+    width: 100%;
+    height: 100%;
+}
     </style>
 </head>
 <body>
@@ -425,13 +521,12 @@
             </div>
         </div>
 
-        <div class="center-panel">
-
-            <div class="container">
-                <h2 class="panel-header">Main Content Area</h2>
-                <div id="graph"></div>
-            </div>
-        </div>
+<div class="center-panel">
+    <!-- Graph Container -->
+    <div id="graphContainer">
+        <svg id="graphSVG"></svg>  <!-- Graph SVG goes here -->
+    </div>
+</div>
 
         <div class="right-panel">
             <div class="panel-content">
@@ -774,87 +869,123 @@ ister2Button.addEventListener('click', () => {
         outputPanel.appendChild(errorBox);
     });
 });
-function createGraph(graphData) {
-            const width = 800;
-            const height = 600;
+        window.onload = function() {
+            // Fetch the graph data
+            fetch('/get_graph_data')
+                .then(response => response.json())
+                .then(data => {
+                    const nodes = data.nodes;
+                    const links = data.links;
 
-            // SVG alanı oluştur
-            const svg = d3.select("#graph")
-                .append("svg")
-                .attr("width", width)
-                .attr("height", height);
+                    // Initialize dimensions of the graph container
+                    const container = d3.select("#graphContainer");
+                    const width = container.node().getBoundingClientRect().width;
+                    const height = container.node().getBoundingClientRect().height;
 
-            // Düğüm ve kenar verilerini al
-            const nodes = graphData.nodes;
-            const links = graphData.links;
+                    const svg = d3.select("#graphSVG");
 
-            // Force Simulation
-            const simulation = d3.forceSimulation(nodes)
-                .force("link", d3.forceLink(links).id(d => d.id))
-                .force("charge", d3.forceManyBody().strength(-200))
-                .force("center", d3.forceCenter(width / 2, height / 2));
+                    // Create a group to contain the entire graph (including links, nodes, and labels)
+                    const graphGroup = svg.append("g");
 
-            // Kenarları oluştur
-            const link = svg.append("g")
-                .selectAll(".link")
-                .data(links)
-                .enter().append("line")
-                .attr("class", "link");
+                    // Set up the zoom behavior (pan and zoom)
+                    const zoom = d3.zoom()
+                        .scaleExtent([0.5, 5]) // Zoom limits: 50% to 500%
+                        .on("zoom", function(event) {
+                            // Apply zoom transform to the graph group
+                            graphGroup.attr("transform", event.transform);
+                        });
 
-            // Düğümleri oluştur
-            const node = svg.append("g")
-                .selectAll(".node")
-                .data(nodes)
-                .enter().append("circle")
-                .attr("class", "node")
-                .attr("r", 10)
-                .call(d3.drag()
-                    .on("start", dragstarted)
-                    .on("drag", dragged)
-                    .on("end", dragended));
+                    // Apply zoom behavior to the SVG container
+                    svg.call(zoom);
 
-            // Düğüm etiketlerini oluştur
-            node.append("title")
-                .text(d => d.full_name);
+                    // Set up the simulation (without changing node positions)
+                    const simulation = d3.forceSimulation(nodes)
+                        .force("link", d3.forceLink(links).id(d => d.id).distance(200))
+                        .force("charge", d3.forceManyBody().strength(-300))
+                        .force("center", d3.forceCenter(width / 2, height / 2));
 
-            // Düğüm pozisyonlarını güncelle
-            simulation.on("tick", () => {
-                link
-                    .attr("x1", d => d.source.x)
-                    .attr("y1", d => d.source.y)
-                    .attr("x2", d => d.target.x)
-                    .attr("y2", d => d.target.y);
+                    // Links (edges)
+                    const linkGroup = graphGroup.append("g")
+                        .attr("class", "links");
 
-                node
-                    .attr("cx", d => d.x)
-                    .attr("cy", d => d.y);
-            });
+                    const link = linkGroup.selectAll(".link")
+                        .data(links)
+                        .enter().append("line")
+                        .attr("class", "link")
+                        .attr("stroke-width", 2)
+                        .attr("stroke", "#888")
+                        .attr("opacity", 0.7);
 
-            // Düğüm sürükleme işlemleri
-            function dragstarted(event) {
-                if (!event.active) simulation.alphaTarget(0.3).restart();
-                event.subject.fx = event.subject.x;
-                event.subject.fy = event.subject.y;
-            }
+                    // Nodes
+                    const nodeGroup = graphGroup.append("g")
+                        .attr("class", "nodes");
 
-            function dragged(event) {
-                event.subject.fx = event.x;
-                event.subject.fy = event.y;
-            }
+                    const node = nodeGroup.selectAll(".node")
+                        .data(nodes)
+                        .enter().append("circle")
+                        .attr("class", "node")
+                        .attr("r", 10)
+                        .attr("fill", "lightblue")
+                        .call(d3.drag()
+                            .on("start", dragStarted)
+                            .on("drag", dragged)
+                            .on("end", dragEnded));
 
-            function dragended(event) {
-                if (!event.active) simulation.alphaTarget(0);
-                event.subject.fx = null;
-                event.subject.fy = null;
-            }
-        }
+                    // Labels
+                    const labelGroup = graphGroup.append("g")
+                        .attr("class", "labels");
 
-        // Flask API'den grafik verisini çek
-        fetch('/get_graph_data')
-            .then(response => response.json())
-            .then(data => createGraph(data))
-            .catch(error => console.error('Hata:', error));
+                    const labels = labelGroup.selectAll(".label")
+                        .data(nodes)
+                        .enter().append("text")
+                        .attr("class", "label")
+                        .attr("x", 12)
+                        .attr("y", 3)
+                        .text(d => d.full_name);
 
+                    // Update the positions as the simulation runs (note: no movement, just setting positions)
+                    simulation.on("tick", function() {
+                        link
+                            .attr("x1", d => d.source.x)
+                            .attr("y1", d => d.source.y)
+                            .attr("x2", d => d.target.x)
+                            .attr("y2", d => d.target.y);
+
+                        node
+                            .attr("cx", d => d.x)
+                            .attr("cy", d => d.y);
+
+                        labels
+                            .attr("x", d => d.x)
+                            .attr("y", d => d.y);
+                    });
+
+                    // Handle drag events for nodes (enables node dragging but not affecting simulation positions)
+                    function dragStarted(event, d) {
+                        if (!event.active) simulation.alphaTarget(0.3).restart();
+                        d.fx = d.x;
+                        d.fy = d.y;
+                    }
+
+                    function dragged(event, d) {
+                        d.fx = event.x;
+                        d.fy = event.y;
+                    }
+
+                    function dragEnded(event, d) {
+                        if (!event.active) simulation.alphaTarget(0);
+                        d.fx = null;
+                        d.fy = null;
+                    }
+
+                    // Hide loading message
+                    document.getElementById('loading').style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error fetching graph data:', error);
+                    document.getElementById('loading').textContent = 'Failed to load graph data.';
+                });
+        };
     </script>
 </body>
 </html>
