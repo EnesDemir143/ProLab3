@@ -434,6 +434,13 @@
             height: 600px;
             overflow: hidden;
         }
+                #graphContainer {
+    width: 100%;
+    height: 100vh; /* Yüksekliği tüm ekran yapar */
+    overflow: hidden;
+    position: relative;
+}
+
         #graphSVG {
             width: 100%;
             height: 100%;
@@ -464,13 +471,7 @@
     padding: 0;
 }
 
-/* Styling for the graph container */
-#graphContainer {
-    width: 100%;               /* Full width */
-    height: 100%;              /* Full height */
-    position: relative;        /* Allows positioning of zoom controls */
-    background-color: #fff;
-}
+
 
 /* Styling for zoom buttons (optional positioning) */
 .zoom-controls {
@@ -500,16 +501,73 @@
     color: gray;
     margin-top: 20px;
 }
-#graphContainer {
-    width: 100%;
-    height: 100vh; /* Yüksekliği tüm ekran yapar */
-    overflow: hidden;
-    position: relative;
+
+        /* Popup styling */
+        #authorPopup {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            z-index: 1000;
+        }
+        #authorPopup h3 {
+            margin-top: 0;
+        }
+        #authorPopup .close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .popup-container {
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
 }
 
-#graphSVG {
-    width: 100%;
-    height: 100%;
+.popup-header h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.popup-articles {
+    margin-top: 20px;
+}
+
+.popup-articles .article {
+    margin-bottom: 20px;
+}
+
+.popup-articles a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.popup-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.close-popup {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.popup-footer button:hover {
+    color: red;
 }
     </style>
 </head>
@@ -526,6 +584,23 @@
     <div id="graphContainer">
         <svg id="graphSVG"></svg>  <!-- Graph SVG goes here -->
     </div>
+<div id="popup" class="popup" style="display:none;">
+    <div class="popup-content">
+        <span class="close-btn" id="closePopup">&times;</span>
+
+        <!-- Author Info -->
+        <div class="author-info">
+            <h2 id="authorName"></h2>
+            <p id="authorOrcid"></p>
+        </div>
+
+        <!-- Articles Section -->
+        <div id="authorArticles" class="articles">
+            <!-- Articles will be dynamically inserted here -->
+        </div>
+    </div>
+</div>
+
 </div>
 
         <div class="right-panel">
@@ -869,123 +944,166 @@ ister2Button.addEventListener('click', () => {
         outputPanel.appendChild(errorBox);
     });
 });
-        window.onload = function() {
-            // Fetch the graph data
-            fetch('/get_graph_data')
-                .then(response => response.json())
-                .then(data => {
-                    const nodes = data.nodes;
-                    const links = data.links;
+window.onload = function() {
+    // Fetch the graph data
+    fetch('/get_graph_data')
+        .then(response => response.json())
+        .then(data => {
+            const nodes = data.nodes;
+            const links = data.links;
 
-                    // Initialize dimensions of the graph container
-                    const container = d3.select("#graphContainer");
-                    const width = container.node().getBoundingClientRect().width;
-                    const height = container.node().getBoundingClientRect().height;
+            // Initialize dimensions of the graph container
+            const container = d3.select("#graphContainer");
+            const width = container.node().getBoundingClientRect().width;
+            const height = container.node().getBoundingClientRect().height;
 
-                    const svg = d3.select("#graphSVG");
+            const svg = d3.select("#graphSVG");
 
-                    // Create a group to contain the entire graph (including links, nodes, and labels)
-                    const graphGroup = svg.append("g");
-
-                    // Set up the zoom behavior (pan and zoom)
-                    const zoom = d3.zoom()
-                        .scaleExtent([0.5, 5]) // Zoom limits: 50% to 500%
-                        .on("zoom", function(event) {
-                            // Apply zoom transform to the graph group
-                            graphGroup.attr("transform", event.transform);
-                        });
-
-                    // Apply zoom behavior to the SVG container
-                    svg.call(zoom);
-
-                    // Set up the simulation (without changing node positions)
-                    const simulation = d3.forceSimulation(nodes)
-                        .force("link", d3.forceLink(links).id(d => d.id).distance(200))
-                        .force("charge", d3.forceManyBody().strength(-300))
-                        .force("center", d3.forceCenter(width / 2, height / 2));
-
-                    // Links (edges)
-                    const linkGroup = graphGroup.append("g")
-                        .attr("class", "links");
-
-                    const link = linkGroup.selectAll(".link")
-                        .data(links)
-                        .enter().append("line")
-                        .attr("class", "link")
-                        .attr("stroke-width", 2)
-                        .attr("stroke", "#888")
-                        .attr("opacity", 0.7);
-
-                    // Nodes
-                    const nodeGroup = graphGroup.append("g")
-                        .attr("class", "nodes");
-
-                    const node = nodeGroup.selectAll(".node")
-                        .data(nodes)
-                        .enter().append("circle")
-                        .attr("class", "node")
-                        .attr("r", 10)
-                        .attr("fill", "lightblue")
-                        .call(d3.drag()
-                            .on("start", dragStarted)
-                            .on("drag", dragged)
-                            .on("end", dragEnded));
-
-                    // Labels
-                    const labelGroup = graphGroup.append("g")
-                        .attr("class", "labels");
-
-                    const labels = labelGroup.selectAll(".label")
-                        .data(nodes)
-                        .enter().append("text")
-                        .attr("class", "label")
-                        .attr("x", 12)
-                        .attr("y", 3)
-                        .text(d => d.full_name);
-
-                    // Update the positions as the simulation runs (note: no movement, just setting positions)
-                    simulation.on("tick", function() {
-                        link
-                            .attr("x1", d => d.source.x)
-                            .attr("y1", d => d.source.y)
-                            .attr("x2", d => d.target.x)
-                            .attr("y2", d => d.target.y);
-
-                        node
-                            .attr("cx", d => d.x)
-                            .attr("cy", d => d.y);
-
-                        labels
-                            .attr("x", d => d.x)
-                            .attr("y", d => d.y);
-                    });
-
-                    // Handle drag events for nodes (enables node dragging but not affecting simulation positions)
-                    function dragStarted(event, d) {
-                        if (!event.active) simulation.alphaTarget(0.3).restart();
-                        d.fx = d.x;
-                        d.fy = d.y;
-                    }
-
-                    function dragged(event, d) {
-                        d.fx = event.x;
-                        d.fy = event.y;
-                    }
-
-                    function dragEnded(event, d) {
-                        if (!event.active) simulation.alphaTarget(0);
-                        d.fx = null;
-                        d.fy = null;
-                    }
-
-                    // Hide loading message
-                    document.getElementById('loading').style.display = 'none';
-                })
-                .catch(error => {
-                    console.error('Error fetching graph data:', error);
-                    document.getElementById('loading').textContent = 'Failed to load graph data.';
+            // Set up the zoom behavior
+            const zoom = d3.zoom()
+                .scaleExtent([0.5, 5]) // Zoom limits: 50% to 500%
+                .on("zoom", function(event) {
+                    svg.select("g")
+                        .attr("transform", event.transform);
                 });
-        };
+
+            // Apply zoom behavior to the SVG container
+            svg.call(zoom);
+
+            // Set up the simulation
+            const simulation = d3.forceSimulation(nodes)
+                .force("link", d3.forceLink(links).id(d => d.id).distance(200))
+                .force("charge", d3.forceManyBody().strength(-300))
+                .force("center", d3.forceCenter(width / 2, height / 2));
+
+            // Create a group to contain the links, nodes, and labels
+            const graphGroup = svg.append("g");
+
+            // Links (edges)
+            const link = graphGroup.append("g")
+                .attr("class", "links")
+                .selectAll(".link")
+                .data(links)
+                .enter().append("line")
+                .attr("class", "link")
+                .attr("stroke-width", 2)
+                .attr("stroke", "#888")
+                .attr("opacity", 0.7);
+
+            // Nodes
+            const node = graphGroup.append("g")
+                .attr("class", "nodes")
+                .selectAll(".node")
+                .data(nodes)
+                .enter().append("circle")
+                .attr("class", "node")
+                .attr("r", 10)
+                .attr("fill", "lightblue")
+                .call(d3.drag()
+                    .on("start", dragStarted)
+                    .on("drag", dragged)
+                    .on("end", dragEnded))
+                .on("click", function(event, d) {
+                    // Show the pop-up with the clicked node's data
+                    showPopup(d);
+                });
+
+            // Labels
+            const labels = graphGroup.append("g")
+                .attr("class", "labels")
+                .selectAll(".label")
+                .data(nodes)
+                .enter().append("text")
+                .attr("class", "label")
+                .attr("x", 12)
+                .attr("y", 3)
+                .text(d => d.full_name);
+
+            // Update positions as the simulation runs
+            simulation.on("tick", function() {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+
+                labels
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
+            });
+
+            // Handle drag events for nodes
+            function dragStarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragEnded(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+
+        })
+        .catch(error => {
+            console.error('Error fetching graph data:', error);
+        });
+};
+            // Close popup
+            function closePopup() {
+                document.getElementById("popup").style.display = "none";
+            }
+
+            // Update the positions as the simulation runs
+            simulation.on("tick", function() {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+
+                labels
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
+            });
+// Function to display the popup with the clicked node's data
+function showPopup(nodeData) {
+    // Populate the popup content dynamically
+    document.getElementById("authorName").innerText = nodeData.full_name;
+    document.getElementById("authorOrcid").innerText = "ORCID: " + nodeData.orcid;
+    document.getElementById("authorArticles").innerHTML = nodeData.articles
+        .map(article => {
+            return `<div class="article">
+                        <p><strong>Title:</strong> ${article.title}</p>
+                        <p><strong>DOI:</strong> <a href="https://doi.org/${article.doi}" target="_blank">${article.doi}</a></p>
+                        <p><strong>Coauthors:</strong> ${article.coauthors.join(", ")}</p>
+                    </div>`;
+        })
+        .join("");
+
+    // Display the popup
+    document.getElementById("popup").style.display = "block";
+}
+
+// Close popup
+document.getElementById("closePopup").addEventListener("click", closePopup);
+function closePopup() {
+    document.getElementById("popup").style.display = "none";
+}
     </script>
 </body>
 </html>

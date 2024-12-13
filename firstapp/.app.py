@@ -138,10 +138,8 @@ def ister7():
             'output': f'Hata oluştu: {str(e)}'
         })
 
-
 @app.route("/get_graph_data", methods=["GET"])
 def get_graph_data():
-    # Flask uygulaması başlamadan önce
     orcid_to_author, name_to_author, collaboration_graph = Graph.build_author_graph(df)
 
     # collaboration_graph sınıf düzeyinde bir değişken olarak saklanıyor
@@ -162,6 +160,15 @@ def get_graph_data():
             print(f"Error: Unable to process author name {author.name} with ORCID {author.orcid}.")
             continue  # Hatalı yazarı atla
 
+        # Author'ın makalelerini JSON uyumlu hale getirmek
+        articles_data = []
+        for article in author.articles:
+            articles_data.append({
+                "doi": article.doi,
+                "name": article.name,
+                "coauthors": list(article.coauthors)  # set'i listeye dönüştürüyoruz
+            })
+
         for collaborator, weight in collaborators.items():
             try:
                 collab_label = f"{collaborator.name.split()[0][0]}_{collaborator.name.split()[-1]}_{collaborator.orcid}"
@@ -170,10 +177,13 @@ def get_graph_data():
                 print(f"Error: Unable to process collaborator {collaborator.name} with ORCID {collaborator.orcid}.")
                 continue
 
-        nodes.append({"id": author_label, "full_name": author.name, "orcid": author.orcid})
+        nodes.append({
+            "id": author_label,
+            "full_name": author.name,
+            "orcid": author.orcid,
+            "articles": articles_data  # Makale verilerini burada ekliyoruz
+        })
 
     return jsonify({"nodes": nodes, "links": links})
-
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5555, debug=True)
