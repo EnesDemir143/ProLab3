@@ -569,6 +569,71 @@
 .popup-footer button:hover {
     color: red;
 }
+/* Basic styling for the popup */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 500px;
+    width: 80%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.popup-content h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.popup-content p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.popup .articles {
+    margin-top: 20px;
+}
+
+.popup .article {
+    margin-bottom: 15px;
+}
+
+.popup .article p {
+    font-size: 14px;
+    color: #666;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: #888;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+/* Styling for the close button when hovered */
+.close-btn:hover {
+    color: #333;
+}
     </style>
 </head>
 <body>
@@ -588,13 +653,9 @@
     <div class="popup-content">
         <span class="close-btn" id="closePopup">&times;</span>
 
-        <!-- Author Info -->
-        <div class="author-info">
-            <h2 id="authorName"></h2>
-            <p id="authorOrcid"></p>
-        </div>
+        <h2 id="authorName"></h2>
+        <p id="authorOrcid"></p>
 
-        <!-- Articles Section -->
         <div id="authorArticles" class="articles">
             <!-- Articles will be dynamically inserted here -->
         </div>
@@ -1004,8 +1065,10 @@ window.onload = function() {
                     .on("drag", dragged)
                     .on("end", dragEnded))
                 .on("click", function(event, d) {
-                    // Show the pop-up with the clicked node's data
-                    showPopup(d);
+                    // Only show the popup if the node has valid data
+                    if (d.full_name && d.orcid) {
+                        showPopup(d);  // Show the popup with the clicked node's data
+                    }
                 });
 
             // Labels
@@ -1059,28 +1122,8 @@ window.onload = function() {
             console.error('Error fetching graph data:', error);
         });
 };
-            // Close popup
-            function closePopup() {
-                document.getElementById("popup").style.display = "none";
-            }
 
-            // Update the positions as the simulation runs
-            simulation.on("tick", function() {
-                link
-                    .attr("x1", d => d.source.x)
-                    .attr("y1", d => d.source.y)
-                    .attr("x2", d => d.target.x)
-                    .attr("y2", d => d.target.y);
-
-                node
-                    .attr("cx", d => d.x)
-                    .attr("cy", d => d.y);
-
-                labels
-                    .attr("x", d => d.x)
-                    .attr("y", d => d.y);
-            });
-// Function to display the popup with the clicked node's data
+// Show popup with node data
 function showPopup(nodeData) {
     // Populate the popup content dynamically
     document.getElementById("authorName").innerText = nodeData.full_name;
@@ -1095,12 +1138,21 @@ function showPopup(nodeData) {
         })
         .join("");
 
-    // Display the popup
-    document.getElementById("popup").style.display = "block";
+    // Show the popup
+    const popup = document.getElementById("popup");
+    popup.style.display = "block";
 }
 
-// Close popup
+// Close the popup when clicking outside or on the close button
 document.getElementById("closePopup").addEventListener("click", closePopup);
+window.addEventListener("click", function(event) {
+    const popup = document.getElementById("popup");
+    if (event.target === popup) {
+        closePopup();
+    }
+});
+
+// Close the popup
 function closePopup() {
     document.getElementById("popup").style.display = "none";
 }
