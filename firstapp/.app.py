@@ -3,9 +3,20 @@ import json
 import sys
 from io import StringIO
 
+from CreateGraph.Graph import Graph
+from Heap1.Heap import Heap
+from Isterler1.Ister1 import Ister1
+from Isterler1.Ister6 import Ister6
+from Isterler1.Ister7 import  Ister7
 from flask import Flask, render_template, request, jsonify
-from Main import dijkstra, dfs_longest_path, en_cok_isbirligi_yapan_yazari_bul, graph, queue, heapPush, priority_Queue, \
-    heapPop, visualize_graph, collaboration_graph
+# from ExFiles.Main import dijkstra, dfs_longest_path, en_cok_isbirligi_yapan_yazari_bul, graph, heapPush, priority_Queue, \
+#     heapPop, collaboration_graph
+
+# Flask uygulaması başlamadan önce
+orcid_to_author, name_to_author, collaboration_graph = Graph.build_author_graph(df)
+
+# collaboration_graph sınıf düzeyinde bir değişken olarak saklanıyor
+Graph.collaboration_graph = collaboration_graph
 
 app = Flask(__name__, template_folder='templates')
 
@@ -28,7 +39,7 @@ def index():
 @app.route('/ister6', methods=['POST'])
 def ister6():
     with capture_output() as output:
-        x, y = en_cok_isbirligi_yapan_yazari_bul(graph)
+        x, y = Ister6.en_cok_isbirligi_yapan_yazari_bul(Graph.collaboration_graph)
         print("En çok iş birliği yapan yazar:{}".format(x))
         print("İş birliği sayısı:{}".format(y))
     output_text = output.getvalue().strip()
@@ -46,11 +57,12 @@ def ister6():
 def ister2():
     start_node=request.form['start_node']
     with capture_output() as output:
-        for q in graph[start_node]:
-            heapPush(priority_Queue, len(priority_Queue), (graph[start_node][q], q))
+        priority_Queue=[]
+        for q in Graph.collaboration_graph[start_node]:
+            Heap.heapPush(priority_Queue, len(priority_Queue), (Graph.collaboration_graph[start_node][q], q))
         print(priority_Queue)
         while priority_Queue:
-            yazar, value = heapPop(priority_Queue, len(priority_Queue), 0)
+            yazar, value = Heap.heapPop(priority_Queue, len(priority_Queue), 0)
             print(f"yazar: {yazar}, value: {value}")
     output_text = output.getvalue().strip()
     if not output_text:
@@ -86,7 +98,7 @@ def ister1():
     start_node = request.form.get('start_node')
     end_node = request.form.get('end_node')
     with capture_output() as output:
-        maliyet, yol, history = dijkstra(graph, start_node, end_node)
+        maliyet, yol, history = Ister1.dijkstra(Graph.collaboration_graph, start_node, end_node)
         for i, step in enumerate(history, 1):
             print(f"\nAdım {i}:")
             for node, data in step.items():
@@ -110,7 +122,7 @@ def ister7():
         start_node = request.form.get('start_node')  # Default to 'A' if not provided
 
         with capture_output() as output:
-            current_path = dfs_longest_path(graph, start_node)
+            current_path = Ister7.dfs_longest_path(Graph.collaboration_graph, start_node)
             print(f"En uzun yol: {' -> '.join(current_path)}")
             print(f"Yol uzunluğu: {len(current_path)}")
 
@@ -134,7 +146,7 @@ def get_graph_data():
     links = []
 
     # collaboration_graph üzerinden yazarlar ve işbirlikçileri al
-    for author, collaborators in collaboration_graph.items():
+    for author, collaborators in Graph.collaboration_graph.items():
         # Yazarları ve işbirlikçilerini JSON formatında hazırlayın
         author_label = f"{author.name.split()[0][0]}_{author.name.split()[-1]}_{author.orcid}"
         for collaborator, weight in collaborators.items():

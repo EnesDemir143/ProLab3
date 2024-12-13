@@ -7,8 +7,9 @@ from Objects.Article import Article
 from Objects.Author import Author
 from ReadData.data import df
 
+collaboration_graph =None
 
-class graph:
+class Graph:
     @staticmethod
     def build_author_graph(df):
         orcid_to_author = {}

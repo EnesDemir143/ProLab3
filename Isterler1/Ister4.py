@@ -1,4 +1,4 @@
-from Heap.Heap import Heap
+from Heap1.Heap import Heap
 
 
 class Ister4:
