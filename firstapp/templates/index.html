@@ -1131,7 +1131,7 @@ function showPopup(nodeData) {
     document.getElementById("authorArticles").innerHTML = nodeData.articles
         .map(article => {
             return `<div class="article">
-                        <p><strong>Title:</strong> ${article.title}</p>
+                        <p><strong>Title:</strong> ${article.name}</p>
                         <p><strong>DOI:</strong> <a href="https://doi.org/${article.doi}" target="_blank">${article.doi}</a></p>
                         <p><strong>Coauthors:</strong> ${article.coauthors.join(", ")}</p>
                     </div>`;
