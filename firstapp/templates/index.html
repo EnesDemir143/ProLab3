@@ -591,6 +591,9 @@
     width: 80%;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     position: relative;
+    max-height: 80vh;  /* Limit the height of the popup */
+    height: auto;  /* Allow it to stretch vertically with content */
+    overflow: hidden;  /* Prevent content overflow outside the popup */
 }
 
 .popup-content h2 {
@@ -606,6 +609,8 @@
 
 .popup .articles {
     margin-top: 20px;
+    max-height: 400px;  /* Max height before scrolling */
+    overflow-y: auto;  /* Enable vertical scrolling if content exceeds max height */
 }
 
 .popup .article {
@@ -626,11 +631,6 @@
     cursor: pointer;
 }
 
-.close-btn:hover {
-    color: #333;
-}
-
-/* Styling for the close button when hovered */
 .close-btn:hover {
     color: #333;
 }
