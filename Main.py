@@ -343,7 +343,6 @@ def visualize_graph(collaboration_graph, title="Collaboration Network"):
     plt.legend(handles=[blue_patch, red_patch], loc='best', fontsize=10)
 
     return G, plt
-
 # Not forgetting to set matplotlib to use tight layout
 plt.tight_layout()
 # Assuming df is your pandas DataFrame
