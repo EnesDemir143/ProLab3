@@ -6,6 +6,7 @@ from io import StringIO
 from CreateGraph.Graph import Graph, orcid_to_author
 from Heap1.Heap import Heap
 from Isterler1.Ister1 import Ister1
+from Isterler1.Ister5 import Ister5
 from Isterler1.Ister6 import Ister6
 from Isterler1.Ister7 import  Ister7
 from flask import Flask, render_template, request, jsonify
@@ -88,8 +89,22 @@ def ister4():
 
 @app.route('/ister5', methods=['POST'])
 def ister5():
-    # 5. ister için gerekli parametreleri alıp işlemleri yapacak
-    return jsonify({'success': True})
+    start_node = request.form.get('start_node')
+    name, orcid, count = Ister5.calculate_collaborators_count(Graph.collaboration_graph, start_node)
+
+    with capture_output() as output:
+        print(f"Number of collaborators for author {name} (ORCID: {orcid}): {count}")
+
+    output_text = output.getvalue().strip()
+
+    if not output_text:
+        return jsonify({'error': 'Çıktı üretilemedi.'}), 500  # Eğer çıktı yoksa hata dönüyoruz
+
+    # Çıktıyı her satıra ayırıyoruz
+    output_lines = output_text.splitlines()
+
+    # Çıktıyı JSON formatında döndürüyoruz
+    return jsonify({'output': output_lines}), 200  # Başarılı yanıt
 
 
 @app.route('/ister1', methods=['POST'])

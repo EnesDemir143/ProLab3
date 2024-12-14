@@ -16,4 +16,4 @@ class Ister5:
             for collaborator, count in collaborators.items():
                 print(f"- {collaborator.name}: {count} collaboration(s)")
 
-        return collaborator_count
+        return orcid_to_author[orcid].name,orcid,collaborator_count
