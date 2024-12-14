@@ -3,7 +3,7 @@ import json
 import sys
 from io import StringIO
 
-from CreateGraph.Graph import Graph
+from CreateGraph.Graph import Graph, orcid_to_author
 from Heap1.Heap import Heap
 from Isterler1.Ister1 import Ister1
 from Isterler1.Ister6 import Ister6
@@ -94,26 +94,47 @@ def ister5():
 
 @app.route('/ister1', methods=['POST'])
 def ister1():
-    start_node = request.form.get('start_node')
-    end_node = request.form.get('end_node')
-    with capture_output() as output:
-        maliyet, yol, history = Ister1.dijkstra(Graph.collaboration_graph, start_node, end_node)
+    try:
+        start_node = request.form.get('start_node')
+        end_node = request.form.get('end_node')
+
+        # Dijkstra algoritmasını çalıştır
+        maliyet, yol, history = Ister1.dijkstra(Graph.collaboration_graph,
+                                                orcid_to_author[start_node],
+                                                orcid_to_author[end_node])
+
+        # Çıktıyı hazırlama
+        output_lines = []
+
+        # History'deki nesne referanslarını name ile almak
         for i, step in enumerate(history, 1):
-            print(f"\nAdım {i}:")
+            output_lines.append(f"\nAdım {i}:")
             for node, data in step.items():
-                print(f"{node}: Maliyet = {data['cost']}, Yol = {data['path']}")
-        print(f"En kısa yol maliyeti: {maliyet}")
-        print(f"Yol: {' -> '.join(yol)}")
-    output_text = output.getvalue().strip()
-    # JSON yanıtını manual olarak oluşturuyoruz
-    response = app.response_class(
-        response=json.dumps({'output': output_text}, ensure_ascii=False),
-        status=200,
-        mimetype='application/json'
-    )
-    return response
+                node_name = node
+                path_names = [p.name for p in data['path']]
+                output_lines.append(f"{node_name}: Maliyet = {data['cost']}, Yol = {' -> '.join(path_names)}")
 
+        output_lines.append(f"En kısa yol maliyeti: {maliyet}")
+        # Yol listesindeki nesnelerin name'lerini al
+        yol_names = [node.name for node in yol]
+        output_lines.append(f"Yol: {' -> '.join(yol_names)}")
 
+        # Tüm çıktıyı birleştir
+        output_text = '\n'.join(output_lines)
+
+        return jsonify({
+            'success': True,
+            'output': output_text,
+            'maliyet': maliyet,
+            'yol': yol_names  # İsimleri liste olarak dön
+        })
+
+    except Exception as e:
+        print(f"Hata: {str(e)}")  # Hata mesajını console'a yazdır
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 # app.py
 @app.route('/ister7', methods=['POST'])
 def ister7():
