@@ -1,3 +1,6 @@
+from CreateGraph.Graph import Graph
+from ReadData import data
+
 
 class Node:
     def __init__(self, author, collaborators=None):
@@ -43,7 +46,7 @@ class Ister3:
     def build_from_graph(self):
         """Build BST using collaboration data from Graph class"""
         # First get the collaboration graph from Graph class
-        orcid_to_author, name_to_author, collaboration_graph = build_author_graph(df)
+        orcid_to_author, name_to_author, collaboration_graph = Graph.build_author_graph(data.df)
 
         # Insert each author and their collaborators into BST
         for author, collaborators in collaboration_graph.items():

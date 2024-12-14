@@ -39,7 +39,7 @@ def index():
 def ister6():
     with capture_output() as output:
         x, y = Ister6.en_cok_isbirligi_yapan_yazari_bul(Graph.collaboration_graph)
-        print("En çok iş birliği yapan yazar:{}".format(x))
+        print("En çok iş birliği yapan yazar:{}".format(x.name))
         print("İş birliği sayısı:{}".format(y))
     output_text = output.getvalue().strip()
     if not output_text:
