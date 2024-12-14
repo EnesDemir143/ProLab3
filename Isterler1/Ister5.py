@@ -1,23 +1,14 @@
+from CreateGraph.Graph import orcid_to_author
 class Ister5:
 
     @staticmethod
-    def calculate_collaborators_count(collaboration_graph, author=None):
+    def calculate_collaborators_count(collaboration_graph,orcid):
 
-        if author is None:
-            orcid = input("Please enter the author's ORCID: ").strip()
-            # Find author in orcid_to_author dict
-            for auth in collaboration_graph.keys():
-                if auth.orcid == orcid:
-                    author = auth
-                    break
-            if not author:
-                print("Author not found with given ORCID.")
-                return 0
-
-        collaborators = collaboration_graph[author]
+        collaborators = collaboration_graph[orcid_to_author[orcid]]
         collaborator_count = len(collaborators)
+        print(collaborator_count)
 
-        print(f"Number of collaborators for author {author.name} (ORCID: {author.orcid}): {collaborator_count}")
+        print(f"Number of collaborators for author {orcid_to_author[orcid].name} (ORCID: {orcid}): {collaborator_count}")
 
         # Optionally print all collaborators
         if collaborator_count > 0:

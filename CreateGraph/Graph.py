@@ -8,11 +8,11 @@ from Objects.Author import Author
 from ReadData.data import df
 
 collaboration_graph =None
+orcid_to_author = {}
 
 class Graph:
     @staticmethod
     def build_author_graph(df):
-        orcid_to_author = {}
         name_to_author = {}
         collaboration_graph = defaultdict(lambda: defaultdict(int))
 
