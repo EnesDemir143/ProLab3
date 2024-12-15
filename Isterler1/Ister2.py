@@ -13,3 +13,4 @@ class Ister2:
         while priority_Queue:
             yazar, value = Heap.heapPop(priority_Queue, len(priority_Queue), 0)
             print(f"yazar: {yazar}, value: {value}")
+        return priority_Queue
