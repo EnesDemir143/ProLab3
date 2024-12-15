@@ -138,8 +138,9 @@ def ister7():
         start_node = request.form.get('start_node')
 
         with capture_output() as output:
-            current_path = Ister7.dfs_longest_path(collaboration_graph, start_node)
-            print(f"En uzun yol: {' -> '.join(current_path)}")
+            current_path = Ister7.dfs_longest_path(collaboration_graph, orcid_to_author[start_node])
+            path_names = [author.name for author in current_path]  # Convert Author objects to their names
+            print(f"En uzun yol: {' -> '.join(path_names)}")
             print(f"Yol uzunluğu: {len(current_path)}")
 
         output_text = output.getvalue().strip()
