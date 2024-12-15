@@ -161,8 +161,8 @@ def get_graph_data():
     links = []
 
     for author, collaborators in collaboration_graph.items():
-        if not author.name:
-            print(f"Warning: Author with ORCID {author.orcid} has no name.")
+        if not hasattr(author, 'name') or not hasattr(author, 'orcid'):
+            print(f"Warning: Author with ORCID {author} has no name or orcid attribute.")
             continue
 
         try:
@@ -180,6 +180,10 @@ def get_graph_data():
             })
 
         for collaborator, weight in collaborators.items():
+            if not hasattr(collaborator, 'name') or not hasattr(collaborator, 'orcid'):
+                print(f"Warning: Collaborator with ORCID {collaborator} has no name or orcid attribute.")
+                continue
+
             try:
                 collab_label = f"{collaborator.name.split()[0][0]}_{collaborator.name.split()[-1]}_{collaborator.orcid}"
                 links.append({"source": author_label, "target": collab_label, "weight": weight})
