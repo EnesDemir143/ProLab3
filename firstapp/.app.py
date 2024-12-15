@@ -74,11 +74,19 @@ def ister2():
     return response
 @app.route('/ister3', methods=['POST'])
 def ister3():
+    global history
     start_node = request.form['start_node']
 
+    if history is None:
+        return jsonify({'success': False, 'error': 'History is not initialized.'}), 500
+
     bst = BST()
-    for author in history:
-        bst.insert(author)
+    for step in history:
+        for node, data in step.items():
+            bst.insert(data['cost'])  # Insert cost into the BST
+
+    if start_node not in orcid_to_author:
+        return jsonify({'success': False, 'error': 'Start node not found in ORCID to author mapping.'}), 400
 
     bst.delete(orcid_to_author[start_node])
 
@@ -121,6 +129,7 @@ def ister5():
 
 @app.route('/ister1', methods=['POST'])
 def ister1():
+    global history
     try:
         start_node = request.form.get('start_node')
         end_node = request.form.get('end_node')
