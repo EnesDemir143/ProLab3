@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from CreateGraph.Graph import Graph
 from Heap1.Heap import Heap
 from Isterler1.Ister1 import Ister1
+from Isterler1.Ister3 import  BST
 from Isterler1.Ister5 import Ister5
 from Isterler1.Ister6 import Ister6
 from Isterler1.Ister7 import Ister7
@@ -14,6 +15,7 @@ from io import StringIO
 app = Flask(__name__, template_folder='templates')
 
 # Initialize the graph once at the start
+history=None
 orcid_to_author, name_to_author, collaboration_graph = Graph.build_author_graph(df)
 
 @contextlib.contextmanager
@@ -72,8 +74,31 @@ def ister2():
     return response
 @app.route('/ister3', methods=['POST'])
 def ister3():
-    return jsonify({'success': True})
+    start_node = request.form['start_node']
 
+    bst = BST()
+    for author in history:
+        bst.insert(author)
+
+    bst.delete(orcid_to_author[start_node])
+
+    # Görselleştirme için geçici bir dosya oluştur
+    import tempfile
+    import os
+    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
+    temp_file.close()
+    bst.visualize(temp_file.name)
+
+    # Görselleştirme dosyasını oku ve base64 formatına çevir
+    import base64
+    with open(temp_file.name, 'rb') as f:
+        img_data = f.read()
+    img_base64 = base64.b64encode(img_data).decode('utf-8')
+
+    # Geçici dosyayı sil
+    os.remove(temp_file.name)
+
+    return jsonify({'success': True, 'image': img_base64})
 @app.route('/ister4', methods=['POST'])
 def ister4():
     return jsonify({'success': True})

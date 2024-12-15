@@ -1,114 +1,78 @@
-from CreateGraph.Graph import Graph
-from ReadData import data
+import networkx as nx
+import matplotlib.pyplot as plt
 
+class BST:
+    class Node:
+        def __init__(self, key):
+            self.key = key
+            self.left = None
+            self.right = None
 
-class Node:
-    def __init__(self, author, collaborators=None):
-        self.author = author
-        self.collaborators = collaborators if collaborators else {}
-        self.left = None
-        self.right = None
-
-class Ister3:
     def __init__(self):
         self.root = None
 
-    def insert(self, author, collaborators):
-        """Insert an author into the BST, using ORCID as the key"""
-        if not self.root:
-            self.root = Node(author, collaborators)
+    def insert(self, key):
+        if self.root is None:
+            self.root = self.Node(key)
         else:
-            self._insert_recursive(self.root, author, collaborators)
+            self._insert(self.root, key)
 
-    def _insert_recursive(self, node, author, collaborators):
-        if author.orcid < node.author.orcid:
+    def _insert(self, node, key):
+        if key < node.key:
             if node.left is None:
-                node.left = Node(author, collaborators)
+                node.left = self.Node(key)
             else:
-                self._insert_recursive(node.left, author, collaborators)
-        elif author.orcid > node.author.orcid:
+                self._insert(node.left, key)
+        else:
             if node.right is None:
-                node.right = Node(author, collaborators)
+                node.right = self.Node(key)
             else:
-                self._insert_recursive(node.right, author, collaborators)
+                self._insert(node.right, key)
 
-    def find_author(self, orcid):
-        """Find author by ORCID"""
-        return self._find_recursive(self.root, orcid)
+    def delete(self, key):
+        self.root = self._delete(self.root, key)
 
-    def _find_recursive(self, node, orcid):
-        if node is None or node.author.orcid == orcid:
+    def _delete(self, node, key):
+        if node is None:
             return node
-        if orcid < node.author.orcid:
-            return self._find_recursive(node.left, orcid)
-        return self._find_recursive(node.right, orcid)
+        if key < node.key:
+            node.left = self._delete(node.left, key)
+        elif key > node.key:
+            node.right = self._delete(node.right, key)
+        else:
+            if node.left is None:
+                return node.right
+            elif node.right is None:
+                return node.left
+            temp = self._min_value_node(node.right)
+            node.key = temp.key
+            node.right = self._delete(node.right, temp.key)
+        return node
 
-    def build_from_graph(self):
-        """Build BST using collaboration data from Graph class"""
-        # First get the collaboration graph from Graph class
-        orcid_to_author, name_to_author, collaboration_graph = Graph.build_author_graph(data.df)
+    def _min_value_node(self, node):
+        current = node
+        while current.left is not None:
+            current = current.left
+        return current
 
-        # Insert each author and their collaborators into BST
-        for author, collaborators in collaboration_graph.items():
-            self.insert(author, collaborators)
+    def visualize(self, output_file=None):
+        G = nx.DiGraph()
+        pos = {}
 
-    def print_bst_statistics(self):
-        """Print statistics about the BST structure"""
-        print("\nBST Statistics:")
+        def add_edges(node, x=0, y=0, level=0):
+            if node is not None:
+                G.add_node(node.key)
+                pos[node.key] = (x, -y)
+                if node.left:
+                    G.add_edge(node.key, node.left.key)
+                    add_edges(node.left, x - 2**(-level-1), y + 1, level + 1)
+                if node.right:
+                    G.add_edge(node.key, node.right.key)
+                    add_edges(node.right, x + 2**(-level-1), y + 1, level + 1)
 
-        def count_nodes(node):
-            if not node:
-                return 0
-            return 1 + count_nodes(node.left) + count_nodes(node.right)
-
-        total_authors = count_nodes(self.root)
-        print(f"Total number of authors in BST: {total_authors}")
-
-        def print_author_details(node):
-            if node:
-                print(f"\nAuthor: {node.author.name} ({node.author.orcid})")
-                print(f"Number of collaborators: {len(node.collaborators)}")
-                for coauthor, weight in node.collaborators.items():
-                    print(f"  - {coauthor.name}: {weight} collaboration(s)")
-                print_author_details(node.left)
-                print_author_details(node.right)
-
-        print("\nAuthor Details (In-order traversal):")
-        print_author_details(self.root)
-
-    def inorder_traversal(self):
-        """Perform inorder traversal of the BST"""
-        result = []
-        def _inorder(node):
-            if node:
-                _inorder(node.left)
-                result.append(node.author)
-                _inorder(node.right)
-        _inorder(self.root)
-        return result
-
-    def get_author_collaborations(self, orcid):
-        """Get collaborations for a specific author"""
-        node = self.find_author(orcid)
-        if node:
-            return node.collaborators
-        return None
-
-if __name__ == "__main__":
-    # Create BST instance
-    bst = Ister3()
-
-    # Build BST using collaboration graph
-    bst.build_from_graph()
-
-    # Print BST statistics
-    bst.print_bst_statistics()
-
-    # Example: Find specific author's collaborations
-    # Replace with actual ORCID
-    sample_orcid = "sample_orcid"
-    collaborations = bst.get_author_collaborations(sample_orcid)
-    if collaborations:
-        print(f"\nCollaborations for author with ORCID {sample_orcid}:")
-        for coauthor, count in collaborations.items():
-            print(f"- {coauthor.name}: {count} collaboration(s)")
+        add_edges(self.root)
+        nx.draw(G, pos, with_labels=True, node_color="lightblue", node_size=2000, font_size=10, font_weight="bold")
+        if output_file:
+            plt.savefig(output_file)
+        else:
+            plt.show()
