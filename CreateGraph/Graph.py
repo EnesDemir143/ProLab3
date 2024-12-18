@@ -81,9 +81,16 @@ class Graph:
             for coauthor_name in coauthors:
                 if coauthor_name in name_to_author:
                     coauthor = name_to_author[coauthor_name] ##en son olan nesneyi tutar o ad la.
-                    if coauthor.orcid != main_author.orcid:
+                    if coauthor.orcid != main_author.orcid or coauthor.orcid=="0000":
                         collaboration_graph[main_author][coauthor] = collaboration_graph[main_author].get(coauthor, 0) + 1
                         collaboration_graph[coauthor][main_author] = collaboration_graph[coauthor].get(main_author, 0) + 1
+
+            for index in range(len(coauthors)):
+                for index2 in range(index+1,len(coauthors)):
+                    coauthor1 = name_to_author[coauthors[index]]
+                    coauthor2 = name_to_author[coauthors[index2]]
+                    collaboration_graph[coauthor1][coauthor2] = collaboration_graph[coauthor1].get(coauthor2, 0) + 1
+                    collaboration_graph[coauthor2][coauthor1] = collaboration_graph[coauthor2].get(coauthor1, 0) + 1
 
 
 
