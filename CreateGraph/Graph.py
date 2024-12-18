@@ -16,11 +16,23 @@ class Graph:
         name_to_author = {}
         collaboration_graph = defaultdict(lambda: defaultdict(int))
 
-        for orcid, name in zip(df["orcid"], df["author_name"]):
+        for orcid, name,coauthors,author_position in zip(df["orcid"], df["author_name"],df["coauthors"],df["author_position"]):
             name = name.strip()
             orcid = orcid.strip()
+            coauthors = coauthors.strip('[]').replace("'", "").split(',')
+            coauthors = [name.strip() for name in coauthors]
 
-            if orcid not in orcid_to_author:
+            if len(coauthors) > 1:
+                coauthors.pop(author_position - 1)
+
+            for coauthor_name in coauthors:
+                if coauthor_name not in name_to_author:
+                    author = Author("0000", coauthor_name)
+                    name_to_author[coauthor_name] = author
+                    collaboration_graph[author] = {}
+
+
+            if orcid not in orcid_to_author :
                 author = Author(orcid, name)
                 orcid_to_author[orcid] = author
                 name_to_author[name] = author #aynı adda olanlarda burada her eklenen nesne bir öncekini eziyor.
@@ -40,6 +52,22 @@ class Graph:
             main_author.articles.add(article)
 
         for row in df.itertuples():
+            author_position = row.author_position
+            coauthors = row.coauthors.strip('[]').replace("'", "").split(',')
+
+            coauthors = [name.strip() for name in coauthors]
+
+            if len(coauthors) > 1:
+                coauthors.pop(author_position - 1)
+
+
+            article = Article(row.doi, row.paper_title, coauthors)
+            for coauthor_name in coauthors:
+                main_author = name_to_author[coauthor_name]
+                main_author.articles.add(article)
+
+
+        for row in df.itertuples():
             orcid = row.orcid.strip()
             main_author = orcid_to_author[orcid]
 
@@ -56,6 +84,8 @@ class Graph:
                     if coauthor.orcid != main_author.orcid:
                         collaboration_graph[main_author][coauthor] = collaboration_graph[main_author].get(coauthor, 0) + 1
                         collaboration_graph[coauthor][main_author] = collaboration_graph[coauthor].get(main_author, 0) + 1
+
+
 
         return orcid_to_author, name_to_author, collaboration_graph
 

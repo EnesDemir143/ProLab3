@@ -15,7 +15,7 @@ from io import StringIO
 app = Flask(__name__, template_folder='templates')
 
 # Initialize the graph once at the start
-history=None
+queue=None
 orcid_to_author, name_to_author, collaboration_graph = Graph.build_author_graph(df)
 
 @contextlib.contextmanager
@@ -74,14 +74,14 @@ def ister2():
     return response
 @app.route('/ister3', methods=['POST'])
 def ister3():
-    global history
+    global queue
     start_node = request.form['start_node']
 
-    if history is None:
+    if queue is None:
         return jsonify({'success': False, 'error': 'History is not initialized.'}), 500
 
     bst = BST()
-    for step in history:
+    for step in queue:
         for node, data in step.items():
             bst.insert(data['cost'])  # Insert cost into the BST
 
@@ -129,7 +129,7 @@ def ister5():
 
 @app.route('/ister1', methods=['POST'])
 def ister1():
-    global history
+    global queue
     try:
         start_node = request.form.get('start_node')
         end_node = request.form.get('end_node')
@@ -232,8 +232,19 @@ def get_graph_data():
             "orcid": author.orcid,
             "articles": articles_data
         })
-
+    print_graph_info()
     return jsonify({"nodes": nodes, "links": links})
+
+@app.route('/print_graph_info', methods=['GET'])
+def print_graph_info():
+    total_nodes = len(collaboration_graph)
+    total_edges = sum(len(neighbors) for neighbors in collaboration_graph.values())
+
+    print(f"Total number of nodes: {total_nodes}")
+    print(f"Total number of edges: {total_edges/2}")
+
+    return jsonify({'success': True, 'message': 'Graph info printed to terminal.'})
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5555, debug=True)
