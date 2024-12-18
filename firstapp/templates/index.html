@@ -633,329 +633,53 @@
 
 .close-btn:hover {
     color: #333;
-}* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+/* Karanlık Mod Stilleri */
+body.dark-mode {
+    background-color: #2c3e50;
+    color: #ecf0f1;
 }
 
-html, body {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    background-color: #121212;
-    color: #e0e0e0;
+.container.dark-mode {
+    background: linear-gradient(145deg, #34495e, #2c3e50);
 }
 
-.container {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    background: linear-gradient(145deg, #121212, #1e1e1e);
+.left-panel.dark-mode,
+.right-panel.dark-mode {
+    background: linear-gradient(135deg, #34495e, #2c3e50);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
-.left-panel, .right-panel {
-    width: 20%;
-    background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
-    padding: 25px;
-    overflow-y: auto;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+.center-panel.dark-mode {
+    background-color: #34495e;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
 }
 
-.center-panel {
-    width: 60%;
-    background-color: #1e1e1e;
-    padding: 25px;
-    overflow-y: auto;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease;
+.ister-item.dark-mode {
+    background: #3b3b3b;
+    color: #ecf0f1;
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1),
+                0 1px 3px rgba(255, 255, 255, 0.2);
 }
 
-.panel-content {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+.ister-input.dark-mode {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    border-color: #4e5d6c;
 }
 
-.ister-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    gap: 15px;
-    padding: 5px;
+.approve-button.dark-mode,
+.calculate-button.dark-mode {
+    background-color: #1abc9c;
+    color: #ecf0f1;
 }
 
-.ister-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: #2a2a2a;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    transition: all 0.3s ease;
+.error-box.dark-mode {
+    background-color: #e74c3c;
+    color: #ecf0f1;
+    border-color: #c0392b;
 }
 
-.ister-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.7);
-}
-
-.ister-label {
-    font-size: 1.1em;
-    font-weight: 600;
-    color: #1a73e8;
-    margin-bottom: 12px;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-}
-
-.ister-input {
-    padding: 8px 12px;
-    border: 2px solid #3a3a3a;
-    border-radius: 8px;
-    font-size: 0.9em;
-    transition: all 0.3s ease;
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-    line-height: 1.2;
-    margin-bottom: 8px;
-    height: 35px;
-}
-
-.ister-input:focus {
-    outline: none;
-    border-color: #1a73e8;
-    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
-    background-color: #2a2a2a;
-}
-
-.approve-button, .calculate-button {
-    padding: 8px 16px;
-    background-color: #1a73e8;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.9em;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-top: 8px;
-    align-self: flex-end;
-}
-
-.approve-button:hover, .calculate-button:hover {
-    opacity: 0.9;
-    transform: scale(1.05);
-}
-
-.approve-button:active, .calculate-button:active {
-    transform: translateY(1px);
-}
-
-.panel-header {
-    font-size: 1.5em;
-    font-weight: 600;
-    color: #e0e0e0;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #3a3a3a;
-}
-
-.error-box {
-    background-color: #3a3a3a;
-    border: 1px solid #f5c6cb;
-    color: #f8d7da;
-    border-radius: 8px;
-    padding: 15px;
-    margin-top: 15px;
-    font-size: 1em;
-    line-height: 1.5;
-}
-
-.output-card {
-    background-color: #2a2a2a;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    margin-top: 15px;
-    font-size: 1.1em;
-    color: #e0e0e0;
-    line-height: 1.6;
-    transition: transform 0.3s ease;
-}
-
-.output-card:hover {
-    transform: translateY(-5px);
-}
-
-.step {
-    background-color: #3a3a3a;
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-    font-size: 0.9em;
-    color: #e0e0e0;
-}
-
-#graphSVG {
-    width: 100%;
-    height: 100%;
-}
-
-.node {
-    cursor: pointer;
-    fill: #1a73e8;
-}
-
-.link {
-    stroke: #888;
-    stroke-width: 2px;
-    opacity: 0.7;
-}
-
-.label {
-    font-size: 12px;
-    fill: #e0e0e0;
-    pointer-events: none;
-}
-
-#authorPopup {
-    position: absolute;
-    background-color: #2a2a2a;
-    border: 1px solid #3a3a3a;
-    padding: 10px;
-    display: none;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-    max-width: 300px;
-    z-index: 1000;
-}
-
-#authorPopup h3 {
-    margin-top: 0;
-    color: #e0e0e0;
-}
-
-#authorPopup .close {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    color: #e0e0e0;
-}
-
-.popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.popup-content {
-    background: #2a2a2a;
-    border-radius: 10px;
-    padding: 20px;
-    max-width: 500px;
-    width: 80%;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
-    position: relative;
-    max-height: 80vh;
-    height: auto;
-    overflow: hidden;
-}
-
-.popup-content h2 {
-    font-size: 24px;
-    color: #e0e0e0;
-}
-
-.popup-content p {
-    font-size: 16px;
-    color: #e0e0e0;
-    line-height: 1.5;
-}
-
-.popup .articles {
-    margin-top: 20px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.popup .article {
-    margin-bottom: 15px;
-}
-
-.popup .article p {
-    font-size: 14px;
-    color: #e0e0e0;
-}
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    color: #e0e0e0;
-    cursor: pointer;
-}
-
-.close-btn:hover {
-    color: #ffffff;
-}
-
-@media screen and (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-
-    .left-panel, .center-panel, .right-panel {
-        width: 100%;
-        height: auto;
-        border: none;
-        box-shadow: none;
-    }
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-}
-
-.fade-in {
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-.fade-out {
-    animation: fadeOut 0.5s ease-in-out;
-}
     </style>
 </head>
 <body>
@@ -965,6 +689,10 @@ html, body {
                 <h2 class="panel-header" id="enes">ÇIKTI EKRANI</h2>
             </div>
         </div>
+        <div class="theme-toggle" id="themeToggle">
+    <span id="icon">🌞</span>
+</div>
+
 
 <div class="center-panel">
     <!-- Graph Container -->
@@ -1003,7 +731,7 @@ html, body {
 
                     <div class="ister-item" id="ister3">
                         <label class="ister-label">3.İSTER</label>
-                        <input type="text" class="ister-input" id="isterden3" placeholder="1. İster ID'si...">
+                        <input type="text" class="ister-input" id="ister1ID" placeholder="1. İster ID'si...">
                         <button class="approve-button">Onayla</button>
                     </div>
                     <div class="ister-item" id="ister4">
@@ -1344,7 +1072,7 @@ window.onload = function() {
 
             // Set up the zoom behavior
             const zoom = d3.zoom()
-                .scaleExtent([0.5, 5]) // Zoom limits: 50% to 500%
+                .scaleExtent([0, 5]) // Zoom limits: 50% to 500%
                 .on("zoom", function(event) {
                     svg.select("g")
                         .attr("transform", event.transform);
@@ -1527,51 +1255,28 @@ ister5Button.addEventListener('click', () => {
         outputPanel.appendChild(errorBox);
     });
 });
-// Button click for 3rd "İSTER"
-const ister3Button = document.querySelector('#ister3 .approve-button');
-ister3Button.addEventListener('click', () => {
-    // Get the input value for the start_node
-    const startNode = document.querySelector('#isterden3').value;
+// Tema geçişi işlevi
+const themeToggle = document.getElementById("themeToggle");
+const icon = document.getElementById("icon");
 
-    // Fetch the output for /ister3 route
-    fetch('/ister3', {
-        method: 'POST',
-        body: new URLSearchParams({
-            start_node: startNode
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Sunucudan geçersiz yanıt alındı');
-        }
-        return response.json();
-    })
-    .then(data => {
-        const outputPanel = document.querySelector('#enes'); // Left panel output section
-        outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+// Kaydedilen temayı yükle
+const savedTheme = localStorage.getItem("theme") || "light";
+setTheme(savedTheme);
 
-        if (data.success) {
-            const img = document.createElement('img');
-            img.src = 'data:image/png;base64,' + data.image;
-            img.alt = 'BST Visualization';
-            outputPanel.appendChild(img);
-        } else {
-            const errorBox = document.createElement('div');
-            errorBox.classList.add('error-box');
-            errorBox.innerHTML = `<p><strong>Hata:</strong> ${data.error}</p>`;
-            outputPanel.appendChild(errorBox);
-        }
-    })
-    .catch(error => {
-        console.error('Hata:', error);
-        const outputPanel = document.querySelector('#enes');
-        outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
-        const errorBox = document.createElement('div');
-        errorBox.classList.add('error-box');
-        errorBox.innerHTML = `<p><strong>Hata:</strong> ${error.message}</p>`;
-        outputPanel.appendChild(errorBox);
-    });
+themeToggle.addEventListener("click", () => {
+    const currentTheme = document.body.classList.contains("dark-mode") ? "light" : "dark";
+    setTheme(currentTheme);
 });
+
+function setTheme(theme) {
+    const isDark = theme === "dark";
+    document.body.classList.toggle("dark-mode", isDark);
+    document.querySelectorAll('.container, .left-panel, .center-panel, .right-panel, .ister-item, .ister-input, .approve-button, .calculate-button, .error-box')
+        .forEach(el => el.classList.toggle('dark-mode', isDark));
+    icon.textContent = isDark ? "🌙" : "🌞";
+    localStorage.setItem("theme", theme);
+}
+
     </script>
 </body>
 </html>

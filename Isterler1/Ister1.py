@@ -29,7 +29,7 @@ class Ister1:
             Heap.heapPop(min_heap, len(min_heap), 0)
 
             if temp == dest:
-                return str(node_Data[dest]["cost"]), node_Data[dest]["path"], history,min_heap
+                return str(node_Data[dest]["cost"]), node_Data[dest]["path"], history
 
             if temp in visited_Nodes:
                 continue
@@ -43,4 +43,4 @@ class Ister1:
                         node_Data[j]["path"] = node_Data[temp]["path"] + [j]
                         Heap.heapPush(min_heap, len(min_heap), (cost, j))
 
-        return "Yol yok", [], history,min_heap
+        return "Yol yok", [], history
