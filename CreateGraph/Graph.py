@@ -1,5 +1,5 @@
 from collections import defaultdict
-
+from pyvis.network import Network
 import networkx as nx
 from matplotlib import pyplot as plt
 
@@ -13,6 +13,7 @@ orcid_to_author = {}
 class Graph:
     @staticmethod
     def build_author_graph(df):
+        global orcid_to_author,collaboration_graph
         name_to_author = {}
         collaboration_graph = defaultdict(lambda: defaultdict(int))
 
@@ -29,14 +30,14 @@ class Graph:
                 if coauthor_name not in name_to_author:
                     author = Author("0000", coauthor_name)
                     name_to_author[coauthor_name] = author
-                    collaboration_graph[author] = {}
+                    collaboration_graph[author] = defaultdict(int)
 
 
             if orcid not in orcid_to_author :
                 author = Author(orcid, name)
                 orcid_to_author[orcid] = author
                 name_to_author[name] = author #aynı adda olanlarda burada her eklenen nesne bir öncekini eziyor.
-                collaboration_graph[author] = {}
+                collaboration_graph[author] = defaultdict(int)
 
         for row in df.itertuples():
             orcid = row.orcid.strip()
@@ -85,15 +86,10 @@ class Graph:
                         collaboration_graph[main_author][coauthor] = collaboration_graph[main_author].get(coauthor, 0) + 1
                         collaboration_graph[coauthor][main_author] = collaboration_graph[coauthor].get(main_author, 0) + 1
 
-            for index in range(len(coauthors)):
-                for index2 in range(index+1,len(coauthors)):
-                    coauthor1 = name_to_author[coauthors[index]]
-                    coauthor2 = name_to_author[coauthors[index2]]
-                    collaboration_graph[coauthor1][coauthor2] = collaboration_graph[coauthor1].get(coauthor2, 0) + 1
-                    collaboration_graph[coauthor2][coauthor1] = collaboration_graph[coauthor2].get(coauthor1, 0) + 1
 
 
 
+        print(collaboration_graph[name_to_author["Rohit Kumar"]].keys())
         return orcid_to_author, name_to_author, collaboration_graph
 
     @staticmethod
@@ -131,78 +127,50 @@ class Graph:
 
     @staticmethod
     def visualize_graph(collaboration_graph, title="Collaboration Network"):
-        # Create NetworkX graph
-        G = nx.Graph()  # Undirected graph since collaborations are bidirectional
+        net = Network(height='750px', width='100%', bgcolor='#222222', font_color='white')
 
-        # Add all authors as nodes with unique identifiers
-        for author in collaboration_graph.keys():
-            # Create a unique identifier by combining last name, first name initial, and ORCID
-            author_label = f"{author.name.split()[0][0]}_{author.name.split()[-1]}_{author.orcid}"
-            G.add_node(author_label,
-                       full_name=author.name,
-                       orcid=author.orcid,
-                       is_connected=len(collaboration_graph[author]) > 0)
-
-        # Add edges with weights
+        # Add nodes and edges to the network
         for author, collaborators in collaboration_graph.items():
             author_label = f"{author.name.split()[0][0]}_{author.name.split()[-1]}_{author.orcid}"
+            net.add_node(author_label, label=author.name, title=author.orcid, color='lightblue' if len(collaborators) > 0 else 'lightcoral')
+
             for collaborator, weight in collaborators.items():
                 collab_label = f"{collaborator.name.split()[0][0]}_{collaborator.name.split()[-1]}_{collaborator.orcid}"
-                G.add_edge(author_label, collab_label, weight=weight)
+                net.add_edge(author_label, collab_label, value=weight)
 
-        # Separate isolated and connected nodes
-        isolated_nodes = [node for node in G.nodes() if G.degree(node) == 0]
-        connected_nodes = [node for node in G.nodes() if G.degree(node) > 0]
+        # Customize the network
+        net.set_options("""
+        var options = {
+          "nodes": {
+            "borderWidth": 2,
+            "size": 30,
+            "color": {
+              "border": "#ffffff",
+              "background": "#97c2fc"
+            },
+            "font": {
+              "color": "#ffffff"
+            }
+          },
+          "edges": {
+            "color": {
+              "color": "#ffffff"
+            },
+            "smooth": {
+              "type": "continuous"
+            }
+          },
+          "physics": {
+            "enabled": true,
+            "barnesHut": {
+              "gravitationalConstant": -8000,
+              "springLength": 250
+            }
+          }
+        }
+        """)
 
-        # Calculate edge widths based on weights
-        edge_weights = [G[u][v]['weight'] for u, v in G.edges()]
-        max_weight = max(edge_weights) if edge_weights else 1
-        edge_widths = [2 * w / max_weight for w in edge_weights]
-
-        # Significantly larger figure to accommodate more nodes
-        plt.figure(figsize=(30, 20), dpi=300)
-
-        # Use different layout strategies
-        pos = nx.spring_layout(G, k=1, iterations=200, seed=42)
-
-        # Draw nodes with size based on connection
-        nx.draw_networkx_nodes(G, pos,
-                               nodelist=connected_nodes,
-                               node_color='lightblue',
-                               node_size=500,
-                               alpha=0.7)
-
-        nx.draw_networkx_nodes(G, pos,
-                               nodelist=isolated_nodes,
-                               node_color='lightcoral',
-                               node_size=300,
-                               alpha=0.5)
-
-        # Draw edges
-        nx.draw_networkx_edges(G, pos,
-                               edge_color='gray',
-                               width=edge_widths,
-                               alpha=0.3)
-
-        # Create custom labels showing first initial, last name
-        labels = {node: f"{node.split('_')[0]}.{node.split('_')[1]}" for node in G.nodes()}
-
-        # Draw labels with very small font
-        nx.draw_networkx_labels(G, pos,
-                                labels=labels,
-                                font_size=6,
-                                font_color='darkblue',
-                                font_weight='bold')
-
-        plt.title(title, fontsize=20, pad=20)
-        plt.axis('off')
-
-        # Customize legend
-        blue_patch = plt.plot([], [], 'o', color='lightblue', label='Connected Authors')[0]
-        red_patch = plt.plot([], [], 'o', color='lightcoral', label='Isolated Authors')[0]
-        plt.legend(handles=[blue_patch, red_patch], loc='best', fontsize=10)
-
-        return G, plt
+        net.show(f"{title}.html")
 
     # Not forgetting to set matplotlib to use tight layout
 
@@ -210,6 +178,6 @@ class Graph:
         orcid_to_author, name_to_author, collaboration_graph = build_author_graph(df)
         print_graph_statistics(orcid_to_author, collaboration_graph)
 
-        G, plt = visualize_graph(collaboration_graph, "Author Collaboration Network")
+        visualize_graph(collaboration_graph)
         plt.tight_layout()
         plt.show()

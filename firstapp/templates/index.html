@@ -883,7 +883,7 @@ step.dark-mode {
                     </div>
                     <div class="ister-item" id="ister4">
                         <label class="ister-label">4.İSTER</label>
-                        <input type="text" class="ister-input" id="idD" placeholder="ID D için giriş yapın...">
+                        <input type="text" class="ister-input" id="id4" placeholder="ID D için giriş yapın...">
                         <button class="approve-button">Onayla</button>
                     </div>
                     <div class="ister-item" id="ister5">
@@ -1253,6 +1253,48 @@ ister3Button.addEventListener('click', () => {
     errorBox.innerHTML = `<p><strong>Hata:</strong> ${error.message}</p>`;
     outputPanel.appendChild(errorBox);
 });
+});
+const ister4Button = document.querySelector('#ister4 .approve-button');
+ister4Button.addEventListener('click', () => {
+    // Get the input value for the start_node
+    const startNode = document.querySelector('#id4').value; // Replace with your actual input field ID
+
+    // Fetch the output for /ister3 route
+fetch('/ister1', {
+        method: 'POST',
+        body: new URLSearchParams({
+            start_node: startNode,
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Sunucudan geçersiz yanıt alındı');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const outputPanel = document.querySelector('#enes'); // Left panel output section
+
+        if (data.output) {
+            // Clear previous output and display the new one
+            outputPanel.innerHTML = `<h3>Çıktı Ekranı:</h3>`;
+            const steps = data.output.split("\n"); // Output split by newlines (steps)
+
+            steps.forEach(step => {
+                const stepDiv = document.createElement('div');
+                stepDiv.classList.add('step');  // You can style each step using this class
+                stepDiv.innerHTML = `<p>${step}</p>`; // Add each step in a paragraph
+                outputPanel.appendChild(stepDiv);
+            });
+        } else if (data.error) {
+            // Display error message
+            outputPanel.innerHTML = `<h3>Hata:</h3><p>${data.error}</p>`;
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        alert('Bir hata oluştu.');
+    });
 });
 window.onload = function() {
     // Fetch the graph data

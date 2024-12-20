@@ -26,7 +26,7 @@ class Ister1:
 
         while min_heap:
             history.append({k: {"cost": v["cost"], "path": v["path"].copy()} for k, v in node_Data.items()})
-            current_cost, temp = min_heap[0]
+            _ , temp = min_heap[0]
             queue.append(Heap.heapPop(min_heap, len(min_heap), 0))
 
             if temp == dest:
@@ -43,5 +43,5 @@ class Ister1:
                         node_Data[j]["cost"] = cost
                         node_Data[j]["path"] = node_Data[temp]["path"] + [j]
                         Heap.heapPush(min_heap, len(min_heap), (cost, j))
-
+            print("aaaa")
         return "Yol yok", [], history,queue

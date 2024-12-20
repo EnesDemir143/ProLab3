@@ -1,10 +1,25 @@
+from collections import defaultdict
+
 from Heap1.Heap import Heap
 
 
 class Ister4:
 
     @staticmethod
+    def build_graph(graph,start_node):
+
+        new_graph=defaultdict(lambda: defaultdict(int))
+        new_graph[start_node] = graph[start_node].copy()
+
+        for node in graph[start_node]:
+            for key in graph[node]:
+                new_graph[node][key] = graph[node][key]
+
+        return new_graph
+
+    @staticmethod
     def dijkstra(graph, src, dest):
+        queue = []
         history = []
         import sys
         inf = sys.maxsize
@@ -25,11 +40,11 @@ class Ister4:
 
         while min_heap:
             history.append({k: {"cost": v["cost"], "path": v["path"].copy()} for k, v in node_Data.items()})
-            current_cost, temp = min_heap[0]
-            Heap.heapPop(min_heap, len(min_heap), 0)
+            _ , temp = min_heap[0]
+            queue.append(Heap.heapPop(min_heap, len(min_heap), 0))
 
             if temp == dest:
-                return str(node_Data[dest]["cost"]), node_Data[dest]["path"], history
+                return str(node_Data[dest]["cost"]), node_Data[dest]["path"], history,queue
 
             if temp in visited_Nodes:
                 continue
@@ -42,5 +57,5 @@ class Ister4:
                         node_Data[j]["cost"] = cost
                         node_Data[j]["path"] = node_Data[temp]["path"] + [j]
                         Heap.heapPush(min_heap, len(min_heap), (cost, j))
-
-        return "Yol yok", [], history
+            print("aaaa")
+        return "Yol yok", [], history,queue
