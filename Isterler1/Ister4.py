@@ -6,16 +6,38 @@ from Heap1.Heap import Heap
 class Ister4:
 
     @staticmethod
-    def build_graph(graph,start_node):
+    def build_extended_collaboration_graph_by_id(start_orcid, orcid_to_author, name_to_author, collaboration_graph,
+                                                 depth=2):
 
-        new_graph=defaultdict(lambda: defaultdict(int))
-        new_graph[start_node] = graph[start_node].copy()
+        start_author = orcid_to_author.get(start_orcid)
+        if not start_author:
+            raise ValueError(f"Başlangıç yazarı ORCID '{start_orcid}' bulunamadı.")
 
-        for node in graph[start_node]:
-            for key in graph[node]:
-                new_graph[node][key] = graph[node][key]
+        # İşbirliği grafını kopyala (başlangıç grafını değiştirmemek için)
+        extended_graph = defaultdict(lambda: defaultdict(int))
 
-        return new_graph
+        # İşbirliklerinin işbirliklerini takip et
+        visited = set()
+        to_visit = {start_author}  # Başlangıç yazarıyla başla
+
+        # Depth derecesi kadar gez (2. derece işbirliklerini de alacak)
+        for _ in range(depth):
+            next_to_visit = set()
+
+            for author in to_visit:
+                if author not in visited:
+                    visited.add(author)
+
+                    # Bu yazarın tüm işbirlikçileri
+                    for coauthor in collaboration_graph[author]:
+                        # İlgili işbirlikleri grafını güncelle
+                        extended_graph[author][coauthor] = collaboration_graph[author][coauthor]
+                        extended_graph[coauthor][author] = collaboration_graph[coauthor][author]
+                        next_to_visit.add(coauthor)
+
+            to_visit = next_to_visit
+
+        return extended_graph
 
     @staticmethod
     def dijkstra(graph, src, dest):
@@ -57,5 +79,16 @@ class Ister4:
                         node_Data[j]["cost"] = cost
                         node_Data[j]["path"] = node_Data[temp]["path"] + [j]
                         Heap.heapPush(min_heap, len(min_heap), (cost, j))
-            print("aaaa")
         return "Yol yok", [], history,queue
+    @staticmethod
+    def print_shortest_paths(start_node, collaboration_graph, orcid_to_author):
+        output = []
+        for author in collaboration_graph:
+            if author == start_node:
+                continue
+            path = Ister4.dijkstra(collaboration_graph, start_node, author)
+            if path:
+                cost, nodes, _, _ = path
+                node_names = [orcid_to_author[node].name for node in nodes]
+                output.append(f"Path from {orcid_to_author[start_node].name} to {orcid_to_author[author].name}: {' -> '.join(node_names)} with cost {cost}")
+        return "\n".join(output)

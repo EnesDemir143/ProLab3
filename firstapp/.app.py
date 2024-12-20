@@ -135,24 +135,22 @@ def ister4():
             return jsonify({'success': False, 'error': 'Geçersiz start_node'}), 400
 
         print("Grafik oluşturuluyor...")
-        new_graph = Ister4.build_graph(collaboration_graph, orcid_to_author[start_node])
+        new_graph = Ister4.build_extended_collaboration_graph_by_id(start_node, orcid_to_author,name_to_author, collaboration_graph, depth=2)
         print("Grafik oluşturuldu.")
 
-        output_lines = []
-        for a in new_graph:
-            if a not in orcid_to_author:
-                continue  # Skip if the author is not in the dictionary
+        output = []
+        start=orcid_to_author[start_node]
+        for author in new_graph:
+            if author == start:
+                continue
+            path = Ister4.dijkstra(collaboration_graph, start, author)
+            if path:
+                cost, nodes = path[:2]
+                node_names = [node.name for node in nodes]
+                output.append(f"Path from {start.name} to {author.name}: {' -> '.join(node_names)} with cost {cost}")
 
-            maliyet, yol, history, _ = Ister4.dijkstra(new_graph, orcid_to_author[start_node], a)
 
-            # Yolun adlarını almak
-            yol_names = [author.name for author in yol]  # Veya author.orcid gibi başka bir özellik
-
-            output_lines.append(f"\nYazar: {a.name}")
-            output_lines.append(f"En kısa yol maliyeti: {maliyet}")
-            output_lines.append(f"Yol: {' -> '.join(yol_names)}")  # Yolun adlarını birleştirerek yazdırma
-
-        output_text = '\n'.join(output_lines[:100])  # İlk 100 satırı döndür
+        output_text = '\n'.join(output)
         print("Çıktı hazırlandı.")
 
         return jsonify({
