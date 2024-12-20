@@ -5,6 +5,7 @@ class Ister1:
 
     @staticmethod
     def dijkstra(graph, src, dest):
+        queue = []
         history = []
         import sys
         inf = sys.maxsize
@@ -26,10 +27,10 @@ class Ister1:
         while min_heap:
             history.append({k: {"cost": v["cost"], "path": v["path"].copy()} for k, v in node_Data.items()})
             current_cost, temp = min_heap[0]
-            Heap.heapPop(min_heap, len(min_heap), 0)
+            queue.append(Heap.heapPop(min_heap, len(min_heap), 0))
 
             if temp == dest:
-                return str(node_Data[dest]["cost"]), node_Data[dest]["path"], history
+                return str(node_Data[dest]["cost"]), node_Data[dest]["path"], history,queue
 
             if temp in visited_Nodes:
                 continue
@@ -43,4 +44,4 @@ class Ister1:
                         node_Data[j]["path"] = node_Data[temp]["path"] + [j]
                         Heap.heapPush(min_heap, len(min_heap), (cost, j))
 
-        return "Yol yok", [], history
+        return "Yol yok", [], history,queue

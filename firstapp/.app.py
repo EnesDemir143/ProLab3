@@ -1,3 +1,7 @@
+import base64
+import os
+import tempfile
+
 from flask import Flask, render_template, request, jsonify
 from CreateGraph.Graph import Graph
 from Heap1.Heap import Heap
@@ -15,8 +19,9 @@ from io import StringIO
 app = Flask(__name__, template_folder='templates')
 
 # Initialize the graph once at the start
-queue=None
+queue=[]
 orcid_to_author, name_to_author, collaboration_graph = Graph.build_author_graph(df)
+
 
 @contextlib.contextmanager
 def capture_output():
@@ -72,38 +77,43 @@ def ister2():
         mimetype='application/json'
     )
     return response
+
+
+# Route'unuzda
 @app.route('/ister3', methods=['POST'])
 def ister3():
     global queue
-    start_node = request.form['start_node']
 
-    if queue is None:
-        return jsonify({'success': False, 'error': 'History is not initialized.'}), 500
+    # Kuyruğun durumunu kontrol et
+    if queue is None or not queue:
+        return jsonify({'success': False, 'error': 'Queue is not initialized or empty.'}), 500
 
-    bst = BST()
-    for step in queue:
-        for node, data in step.items():
-            bst.insert(data['cost'])  # Insert cost into the BST
+    start_node = request.form.get('start_node')
+    if not start_node:
+        return jsonify({'success': False, 'error': 'Start node is not provided.'}), 400
 
     if start_node not in orcid_to_author:
         return jsonify({'success': False, 'error': 'Start node not found in ORCID to author mapping.'}), 400
 
+    # İkili arama ağacı oluştur
+    bst = BST()
+    for step in queue:
+        bst.insert(step)
+
+    # Start node'u ağaca uygun formatta sil
     bst.delete(orcid_to_author[start_node])
 
-    # Görselleştirme için geçici bir dosya oluştur
-    import tempfile
-    import os
+    # Görselleştirme dosyası oluştur
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
     temp_file.close()
     bst.visualize(temp_file.name)
 
-    # Görselleştirme dosyasını oku ve base64 formatına çevir
-    import base64
+    # Görselleştirme dosyasını base64'e dönüştür
     with open(temp_file.name, 'rb') as f:
         img_data = f.read()
     img_base64 = base64.b64encode(img_data).decode('utf-8')
 
-    # Geçici dosyayı sil
+    # Geçici dosyayı temizle
     os.remove(temp_file.name)
 
     return jsonify({'success': True, 'image': img_base64})
@@ -134,21 +144,26 @@ def ister1():
         start_node = request.form.get('start_node')
         end_node = request.form.get('end_node')
 
-        maliyet, yol, history = Ister1.dijkstra(collaboration_graph,
+        maliyet, yol, history,queue = Ister1.dijkstra(collaboration_graph,
                                                 orcid_to_author[start_node],
                                                 orcid_to_author[end_node])
-
+        print(queue)
+        print(type(queue))
         output_lines = []
         for i, step in enumerate(history, 1):
             output_lines.append(f"\nAdım {i}:")
             for node, data in step.items():
+                import sys
+                inf = sys.maxsize
+                if data['cost'] == inf:
+                    continue
                 node_name = node
                 path_names = [p.name for p in data['path']]
                 output_lines.append(f"{node_name}: Maliyet = {data['cost']}, Yol = {' -> '.join(path_names)}")
-
         output_lines.append(f"En kısa yol maliyeti: {maliyet}")
         yol_names = [node.name for node in yol]
         output_lines.append(f"Yol: {' -> '.join(yol_names)}")
+
 
         output_text = '\n'.join(output_lines)
 
@@ -192,6 +207,7 @@ def ister7():
 
 @app.route("/get_graph_data", methods=["GET"])
 def get_graph_data():
+    print_graph_info()
     nodes = []
     links = []
 
@@ -232,7 +248,6 @@ def get_graph_data():
             "orcid": author.orcid,
             "articles": articles_data
         })
-    print_graph_info()
     return jsonify({"nodes": nodes, "links": links})
 
 @app.route('/print_graph_info', methods=['GET'])
