@@ -7,6 +7,7 @@ from CreateGraph.Graph import Graph
 from Heap1.Heap import Heap
 from Isterler1.Ister1 import Ister1
 from Isterler1.Ister3 import  BST
+from Isterler1.Ister4 import Ister4
 from Isterler1.Ister5 import Ister5
 from Isterler1.Ister6 import Ister6
 from Isterler1.Ister7 import Ister7
@@ -16,7 +17,10 @@ import json
 import sys
 from io import StringIO
 
-app = Flask(__name__, template_folder='templates')
+from flask_cors import CORS
+
+app = Flask(__name__,template_folder='templates')
+CORS(app)  # Bu, CORS hatalarını önleyecektir.
 
 # Initialize the graph once at the start
 queue=[]
@@ -117,10 +121,53 @@ def ister3():
     os.remove(temp_file.name)
 
     return jsonify({'success': True, 'image': img_base64})
+
+
 @app.route('/ister4', methods=['POST'])
 def ister4():
-    return jsonify({'success': True})
+    global orcid_to_author, name_to_author
+    try:
+        start_node = request.form.get('start_node')
+        print(f"Gelen start_node: {start_node}")
 
+        # Başlangıç node'u geçerli mi kontrol et
+        if not start_node or start_node not in orcid_to_author:
+            return jsonify({'success': False, 'error': 'Geçersiz start_node'}), 400
+
+        print("Grafik oluşturuluyor...")
+        new_graph = Ister4.build_graph(collaboration_graph, orcid_to_author[start_node])
+        print("Grafik oluşturuldu.")
+
+        output_lines = []
+        for a in new_graph:
+            if a not in orcid_to_author:
+                continue  # Skip if the author is not in the dictionary
+
+            maliyet, yol, history, _ = Ister4.dijkstra(new_graph, orcid_to_author[start_node], a)
+
+            # Yolun adlarını almak
+            yol_names = [author.name for author in yol]  # Veya author.orcid gibi başka bir özellik
+
+            output_lines.append(f"\nYazar: {a.name}")
+            output_lines.append(f"En kısa yol maliyeti: {maliyet}")
+            output_lines.append(f"Yol: {' -> '.join(yol_names)}")  # Yolun adlarını birleştirerek yazdırma
+
+        output_text = '\n'.join(output_lines[:100])  # İlk 100 satırı döndür
+        print("Çıktı hazırlandı.")
+
+        return jsonify({
+            'success': True,
+            'output': output_text
+        })
+
+    except KeyError as e:
+        error_message = f"KeyError: {str(e)} - ORCID veya grafik yapılandırmasında bir hata var."
+        print(error_message)
+        return jsonify({'success': False, 'error': error_message}), 500
+    except Exception as e:
+        error_message = f"Beklenmeyen bir hata oluştu: {str(e)}"
+        print(error_message)
+        return jsonify({'success': False, 'error': error_message}), 500
 @app.route('/ister5', methods=['POST'])
 def ister5():
     start_node = request.form.get('start_node')
