@@ -86,8 +86,6 @@ def ister2():
 # Route'unuzda
 @app.route('/ister3', methods=['POST'])
 def ister3():
-    global queue
-
     # Kuyruğun durumunu kontrol et
     if queue is None or not queue:
         return jsonify({'success': False, 'error': 'Queue is not initialized or empty.'}), 500
@@ -189,7 +187,7 @@ def ister1():
         start_node = request.form.get('start_node')
         end_node = request.form.get('end_node')
 
-        maliyet, yol, history = Ister1.dijkstra(collaboration_graph,
+        maliyet, yol, history,_= Ister1.dijkstra(collaboration_graph,
                                                 orcid_to_author[start_node],
                                                 orcid_to_author[end_node])
 
