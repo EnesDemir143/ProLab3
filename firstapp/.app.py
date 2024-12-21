@@ -185,30 +185,25 @@ def ister5():
 @app.route('/ister1', methods=['POST'])
 def ister1():
     global queue
-    global collaboration_graph, orcid_to_author, name_to_author
     try:
         start_node = request.form.get('start_node')
         end_node = request.form.get('end_node')
-        maliyet, yol, history,queue = Ister1.dijkstra(collaboration_graph,
+
+        maliyet, yol, history = Ister1.dijkstra(collaboration_graph,
                                                 orcid_to_author[start_node],
                                                 orcid_to_author[end_node])
-        for a in name_to_author["Rohit Kumar"].articles:
-            print(a.name)
+
         output_lines = []
         for i, step in enumerate(history, 1):
             output_lines.append(f"\nAdım {i}:")
             for node, data in step.items():
-                import sys
-                inf = sys.maxsize
-                if data['cost'] == inf:
-                    continue
                 node_name = node
                 path_names = [p.name for p in data['path']]
                 output_lines.append(f"{node_name}: Maliyet = {data['cost']}, Yol = {' -> '.join(path_names)}")
+
         output_lines.append(f"En kısa yol maliyeti: {maliyet}")
         yol_names = [node.name for node in yol]
         output_lines.append(f"Yol: {' -> '.join(yol_names)}")
-
 
         output_text = '\n'.join(output_lines)
 

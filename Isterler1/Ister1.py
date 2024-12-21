@@ -1,3 +1,5 @@
+import sys
+
 from Heap1.Heap import Heap
 
 
@@ -43,5 +45,4 @@ class Ister1:
                         node_Data[j]["cost"] = cost
                         node_Data[j]["path"] = node_Data[temp]["path"] + [j]
                         Heap.heapPush(min_heap, len(min_heap), (cost, j))
-            print("aaaa")
         return "Yol yok", [], history,queue

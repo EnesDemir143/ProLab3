@@ -95,7 +95,6 @@ class Graph:
 
 
 
-        print(collaboration_graph[name_to_author["Rohit Kumar"]].keys())
         return orcid_to_author, name_to_author, collaboration_graph
 
     @staticmethod
