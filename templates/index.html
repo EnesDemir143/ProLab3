@@ -1322,20 +1322,8 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .catch(error => console.error('Error fetching graph data:', error));
 
-    // "Onayla" butonuna tıklama olayını yakala
-    document.querySelector(".approve-button").addEventListener("click", function() {
-        // Kullanıcıdan ID A ve ID B girişlerini al
-        const idA = document.querySelector("#idA").value.trim();
-        const idB = document.querySelector("#idB").value.trim();
+    
 
-        if (!idA || !idB) {
-            alert("Lütfen hem ID A hem de ID B alanlarını doldurun!");
-            return;
-        }
-
-        // En kısa yolu bul ve grafiği güncelle
-        fetchShortestPath(idA, idB);
-    });
 });
 
 // Grafiği başlangıçta çizen işlev
@@ -1507,6 +1495,12 @@ ister5Button.addEventListener('click', () => {
         collaboratorsDiv.innerHTML = `<h4>Sonuç:</h4><p>${data.output[0]}</p>`;
         outputCard.appendChild(collaboratorsDiv);
         outputPanel.appendChild(outputCard);
+        if (data.author) {
+                    d3.selectAll(".node")
+                        .filter(d => d.orcid === data.author)
+                        .attr("fill", "pink");
+                }
+        
     } else if (data.error) {
         const errorBox = document.createElement('div');
         errorBox.classList.add('error-box');

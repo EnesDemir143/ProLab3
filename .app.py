@@ -208,7 +208,7 @@ def ister5():
         return jsonify({'error': 'Çıktı üretilemedi.'}), 500
 
     output_lines = output_text.splitlines()
-    return jsonify({'output': output_lines}), 200
+    return jsonify({'output': output_lines,'author': orcid}), 200
 
 @app.route('/ister1', methods=['POST'])
 def ister1():
