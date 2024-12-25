@@ -1,7 +1,5 @@
 from collections import defaultdict
-from pyvis.network import Network
 import networkx as nx
-from matplotlib import pyplot as plt
 
 from Objects.Article import Article
 from Objects.Author import Author
@@ -133,59 +131,9 @@ class Graph:
         for author in isolated_authors:
             print(f"- {author.name} ({author.orcid})")
 
-    @staticmethod
-    def visualize_graph(collaboration_graph, title="Collaboration Network"):
-        net = Network(height='750px', width='100%', bgcolor='#222222', font_color='white')
-
-        # Add nodes and edges to the network
-        for author, collaborators in collaboration_graph.items():
-            author_label = f"{author.name.split()[0][0]}_{author.name.split()[-1]}_{author.orcid}"
-            net.add_node(author_label, label=author.name, title=author.orcid, color='lightblue' if len(collaborators) > 0 else 'lightcoral')
-
-            for collaborator, weight in collaborators.items():
-                collab_label = f"{collaborator.name.split()[0][0]}_{collaborator.name.split()[-1]}_{collaborator.orcid}"
-                net.add_edge(author_label, collab_label, value=weight)
-
-        # Customize the network
-        net.set_options("""
-        var options = {
-          "nodes": {
-            "borderWidth": 2,
-            "size": 30,
-            "color": {
-              "border": "#ffffff",
-              "background": "#97c2fc"
-            },
-            "font": {
-              "color": "#ffffff"
-            }
-          },
-          "edges": {
-            "color": {
-              "color": "#ffffff"
-            },
-            "smooth": {
-              "type": "continuous"
-            }
-          },
-          "physics": {
-            "enabled": true,
-            "barnesHut": {
-              "gravitationalConstant": -8000,
-              "springLength": 250
-            }
-          }
-        }
-        """)
-
-        net.show(f"{title}.html")
 
     # Not forgetting to set matplotlib to use tight layout
 
     if __name__=="__main__":
         orcid_to_author, name_to_author, collaboration_graph = build_author_graph(df)
         print_graph_statistics(orcid_to_author, collaboration_graph)
-
-        visualize_graph(collaboration_graph)
-        plt.tight_layout()
-        plt.show()
