@@ -1,7 +1,7 @@
-import networkx as nx
-import matplotlib 
+import networkx as nx # type: ignore
+import matplotlib  # type: ignore
 matplotlib.use('Agg')  # GUI yerine arka planda çalışır
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # type: ignore
 
 class BST:
     class Node:

@@ -1044,6 +1044,12 @@ calculateButton.addEventListener('click', () => {
 
                 outputCard.appendChild(pathDetails);
                 outputPanel.appendChild(outputCard);
+
+                if (data.orcid) {
+                    d3.selectAll(".node")
+                        .filter(d => d.orcid === data.orcid)
+                        .attr("fill", "pink");
+                }
             } else if (data.error) {
                 const errorBox = document.createElement('div');
                 errorBox.classList.add('error-box');

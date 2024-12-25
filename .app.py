@@ -47,10 +47,11 @@ def ister6():
         print("En çok iş birliği yapan yazar:{}".format(x.name))
         print("İş birliği sayısı:{}".format(y))
     output_text = output.getvalue().strip()
+    print(x)
     if not output_text:
         return jsonify({'error': 'Çıktı üretilemedi.'}), 500
     response = app.response_class(
-        response=json.dumps({'output': output_text}, ensure_ascii=False),
+        response=json.dumps({'output': output_text,'orcid': x.orcid}, ensure_ascii=False),
         status=200,
         mimetype='application/json'
     )
@@ -176,7 +177,6 @@ def ister4():
                 paths.append([name_to_author[node.name].orcid for node in nodes])
                 output.append(f"Path from {start.name} to {author.name}: {' -> '.join(node_names)} with cost {cost}")
 
-        print(paths)
         output_text = '\n'.join(output)
         print("Çıktı hazırlandı.")
 

@@ -1,5 +1,5 @@
 from collections import defaultdict
-import networkx as nx
+import networkx as nx # type: ignore
 
 from Objects.Article import Article
 from Objects.Author import Author
