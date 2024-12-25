@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Three Column Layout</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>        * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    html, body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        background-color: #f8f9fa;
+        color: #2c3e50;
+    }
+
+    .container {
+        display: flex;
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(145deg, #f8f9fa, #ffffff);
+    }
+
+    .left-panel {
+        width: 20%;
+        background: linear-gradient(135deg, #ffffff, #f1f3f5);
+        padding: 25px;
+        overflow-y: auto;
+        border-right: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 2px 0 5px rgba(0,0,0,0.03);
+    }
+
+    .center-panel {
+        width: 60%;
+        background-color: #ffffff;
+        padding: 25px;
+        overflow-y: auto;
+        box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    }
+
+    .right-panel {
+        width: 20%;
+        background: linear-gradient(225deg, #ffffff, #f1f3f5);
+        padding: 25px;
+        overflow-y: auto;
+        border-left: 1px solid rgba(0,0,0,0.05);
+        box-shadow: -2px 0 5px rgba(0,0,0,0.03);
+    }
+
+    .panel-content {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ister-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        gap: 15px;
+        padding: 5px;
+    }
+
+    .ister-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05),
+                    0 1px 3px rgba(0,0,0,0.1);
+        padding: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .ister-label {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #1a73e8;
+        margin-bottom: 12px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        font-size: 0.9em;
+    }
+    .step {
+    background-color: #f1f3f5;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 0.9em;
+    color: #333;
+}
+    /* Enhanced output card for İSTER 6 */
+.output-card {
+background-color: #ffffff;
+border-radius: 12px;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+padding: 20px;
+margin-top: 15px;
+font-size: 1.1em;
+color: #333;
+line-height: 1.6;
+transition: transform 0.3s ease;
+}
+
+.output-card:hover {
+transform: translateY(-5px);
+}
+
+/* Error message box */
+.error-box {
+background-color: #f8d7da;
+border: 1px solid #f5c6cb;
+color: #721c24;
+border-radius: 8px;
+padding: 15px;
+margin-top: 15px;
+font-size: 1em;
+line-height: 1.5;
+}
+
+/* Heading of the output area */
+#enes h3 {
+font-size: 1.4em;
+font-weight: 600;
+color: #1a73e8;
+margin-bottom: 15px;
+}
+
+
+    .ister-input {
+        padding: 8px 12px;
+        border: 2px solid #e1e4e8;
+        border-radius: 8px;
+        font-size: 0.9em;
+        transition: all 0.3s ease;
+        background-color: #f8f9fa;
+        color: #2c3e50;
+        line-height: 1.2;
+        margin-bottom: 8px;
+        height: 35px;
+    }
+
+    textarea.ister-input {
+        height: 60px;
+        resize: none;
+    }
+
+    .ister-input:focus {
+        outline: none;
+        border-color: #1a73e8;
+        box-shadow: 0 0 0 3px rgba(26,115,232,0.2);
+        background-color: #ffffff;
+    }
+    /* Style for the output card */
+.output-card {
+border: 1px solid #ddd;
+border-radius: 8px;
+padding: 20px;
+margin: 20px 0;
+background-color: #f9f9f9;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the path details container */
+.path-details {
+display: flex;
+flex-direction: column;
+gap: 15px;
+}
+
+/* Style for each individual path detail box */
+.path-detail {
+padding: 15px;
+border: 1px solid #ccc;
+border-radius: 5px;
+background-color: #fff;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Optional: Style the headers for better clarity */
+.path-detail strong {
+display: block;
+font-size: 16px;
+color: #333;
+}
+
+
+    #enes p {
+        font-size: 0.5em; /* Çıktı kısmındaki yazıyı küçültme */
+    }
+    .approve-button {
+        padding: 8px 16px;
+        background-color: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.9em;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 8px;
+        align-self: flex-end;
+    }
+
+/* Button hover effect for İSTER 6 */
+.calculate-button {
+padding: 8px 16px;
+background-color: #28a745;
+color: white;
+border: none;
+border-radius: 6px;
+font-size: 0.9em;
+cursor: pointer;
+transition: all 0.2s ease;
+margin-top: 8px;
+align-self: flex-end;
+}
+
+.calculate-button:hover {
+opacity: 0.9;
+transform: scale(1.05);
+}
+
+.calculate-button:active {
+transform: translateY(1px);
+}
+/* Hover effect for all results in İSTER 1 */
+.ister-item:hover {
+transform: translateY(-5px) translateZ(10px); /* Move forward and upward */
+box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+transition: all 0.3s ease;
+}
+
+/* Hover effect for output steps in İSTER 1 (the output steps or results) */
+.step:hover {
+transform: translateY(-5px) translateZ(10px); /* Move forward on hover */
+box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+transition: all 0.3s ease;
+}
+
+/* Hover effect for input fields inside İSTER 1 results */
+.ister-input:hover {
+border-color: #1a73e8; /* Border color change */
+box-shadow: 0 0 0 3px rgba(26,115,232,0.2); /* Glow effect */
+background-color: #ffffff; /* Background change on hover */
+}
+
+/* Hover effect for buttons inside İSTER 1 */
+.approve-button:hover {
+opacity: 0.9; /* Slightly transparent on hover */
+transform: scale(1.05); /* Slight scale effect */
+}
+
+.approve-button:active {
+transform: translateY(1px); /* Button press effect */
+}
+/* Main output card container */
+.output-card {
+background-color: #34495e;
+border-radius: 8px;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+padding: 15px;
+margin-top: 10px;
+}
+/* Üst kısımdan çıktıların arkasındaki yer rengi değiştiriliyor
+
+/* Container for path details */
+.path-details {
+display: flex;
+flex-direction: column;
+gap: 15px;
+width: 100%;
+}
+
+/* Individual path detail boxes */
+.path-detail {
+background-color: #f8f9fa;
+border: 1px solid #e9ecef;
+border-radius: 6px;
+padding: 12px;
+margin-bottom: 10px;
+transition: transform 0.2s ease;
+}
+
+/* Styling for the headers within path details */
+.path-detail strong {
+display: block;
+color: #1a73e8;
+font-size: 0.75em;  /* Reduced font size for headers */
+text-transform: uppercase;
+letter-spacing: 0.3px;
+margin-bottom: 6px;
+border-bottom: 1px solid #e9ecef;
+padding-bottom: 4px;
+}
+
+/* Content styling within path details */
+.path-detail br + text {
+font-size: 0.85em;  /* Reduced font size for content */
+color: #2c3e50;
+line-height: 1.4;
+}
+
+/* Regular text within path details */
+.path-detail {
+font-size: 0.85em;  /* Reduced font size for all text */
+}
+
+/* Header styling for the output panel */
+#enes h3 {
+font-size: 1em;  /* Reduced font size for main header */
+font-weight: 600;
+color: #2c3e50;
+margin-bottom: 15px;
+padding-bottom: 8px;
+border-bottom: 1px solid #e1e4e8;
+}
+
+/* Hover effect */
+.path-detail:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Error box styling */
+.error-box {
+background-color: #fff3f3;
+border: 1px solid #ffcdd2;
+border-radius: 6px;
+padding: 10px;
+margin-top: 10px;
+color: #d32f2f;
+font-size: 0.85em;  /* Reduced font size for errors */
+}
+
+/* Animation for new content */
+.path-detail {
+animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+from {
+    opacity: 0;
+    transform: translateY(5px);
+}
+to {
+    opacity: 1;
+    transform: translateY(0);
+}
+}
+
+/* Hover effect for all results in İSTER 1 */
+.ister-item:hover {
+transform: translateY(-5px) translateZ(10px); /* Move forward and upward */
+box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+transition: all 0.3s ease;
+}
+
+/* Hover effect for input fields inside İSTER 1 results */
+.ister-input:hover {
+border-color: #1a73e8; /* Border color change */
+box-shadow: 0 0 0 3px rgba(26,115,232,0.2); /* Glow effect */
+background-color: #ffffff; /* Background change on hover */
+}
+
+/* Hover effect for buttons inside İSTER 1 */
+.approve-button:hover {
+opacity: 0.9; /* Slightly transparent on hover */
+transform: scale(1.05); /* Slight scale effect */
+}
+
+.approve-button:active {
+transform: translateY(1px); /* Button press effect */
+}
+
+
+    .approve-button:hover, .calculate-button:hover {
+        opacity: 0.9;
+    }
+
+    .approve-button:active, .calculate-button:active {
+        transform: translateY(1px);
+    }
+
+    .panel-header {
+        font-size: 1.5em;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e1e4e8;
+    }
+
+    .error {
+        border: 2px solid #dc3545;
+    }
+
+    @media screen and (max-width: 768px) {
+        .container {
+            flex-direction: column;
+        }
+
+        .left-panel,
+        .center-panel,
+        .right-panel {
+            width: 100%;
+            height: auto;
+            border: none;
+            box-shadow: none;
+        }
+    }
+            #graphSVG {
+        width: 100%;
+        height: 600px;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+
+    h1 {
+        margin-top: 20px;
+    }
+            #graphContainer {
+        width: 100%;
+        height: 600px;
+        overflow: hidden;
+    }
+            #graphContainer {
+width: 100%;
+height: 100vh; /* Yüksekliği tüm ekran yapar */
+overflow: hidden;
+position: relative;
+}
+
+    #graphSVG {
+        width: 100%;
+        height: 100%;
+    }
+    /*.node {
+        cursor: pointer;
+        fill: purple;
+    }
+    .link {
+        stroke: darkblue;
+        stroke-width: 2px;
+        opacity: 0.7;
+    }
+    .label {
+        font-size: 12px;
+        fill: black;
+        pointer-events: none;
+    }*/
+
+/* Styling for the center panel */
+/* Styling for the center panel (Full screen layout) */
+.center-panel {
+display: flex;
+justify-content: center;   /* Horizontally center the content */
+align-items: center;       /* Vertically center the content */
+height: 100vh;             /* Full height of the viewport */
+overflow: hidden;
+padding: 0;
+}
+
+
+
+/* Styling for zoom buttons (optional positioning) */
+.zoom-controls {
+position: absolute;
+top: 10px;
+right: 10px;
+z-index: 10;
+}
+
+.zoom-button {
+background-color: #007bff;
+color: white;
+border: none;
+padding: 10px;
+margin: 5px;
+cursor: pointer;
+border-radius: 5px;
+}
+
+.zoom-button:hover {
+background-color: #0056b3;
+}
+
+/* Optional loading message styling */
+#loading {
+font-size: 18px;
+color: gray;
+margin-top: 20px;
+}
+
+    /* Popup styling */
+    #authorPopup {
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+        display: none;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 300px;
+        z-index: 1000;
+    }
+    #authorPopup h3 {
+        margin-top: 0;
+    }
+    #authorPopup .close {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .popup-container {
+width: 80%;
+max-width: 600px;
+padding: 20px;
+background: white;
+border: 1px solid #ccc;
+border-radius: 8px;
+box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+display: flex;
+flex-direction: column;
+}
+
+.popup-header h2 {
+font-size: 24px;
+color: #333;
+}
+
+.popup-articles {
+margin-top: 20px;
+}
+
+.popup-articles .article {
+margin-bottom: 20px;
+}
+
+.popup-articles a {
+color: #007bff;
+text-decoration: none;
+}
+
+.popup-footer {
+display: flex;
+justify-content: flex-end;
+}
+
+.close-popup {
+background: transparent;
+border: none;
+font-size: 20px;
+cursor: pointer;
+}
+
+.popup-footer button:hover {
+color: red;
+}
+/* Basic styling for the popup */
+.popup {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.5);
+display: none;
+justify-content: center;
+align-items: center;
+z-index: 1000;
+}
+
+.popup-content {
+background: #fff;
+border-radius: 10px;
+padding: 20px;
+max-width: 500px;
+width: 80%;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+position: relative;
+max-height: 80vh;  /* Limit the height of the popup */
+height: auto;  /* Allow it to stretch vertically with content */
+overflow: hidden;  /* Prevent content overflow outside the popup */
+}
+
+.popup-content h2 {
+font-size: 24px;
+color: #333;
+}
+
+.popup-content p {
+font-size: 16px;
+color: #555;
+line-height: 1.5;
+}
+
+.popup .articles {
+margin-top: 20px;
+max-height: 400px;  /* Max height before scrolling */
+overflow-y: auto;  /* Enable vertical scrolling if content exceeds max height */
+}
+
+.popup .article {
+margin-bottom: 15px;
+}
+
+.popup .article p {
+font-size: 14px;
+color: #666;
+}
+
+.close-btn {
+position: absolute;
+top: 10px;
+right: 10px;
+font-size: 24px;
+color: #888;
+cursor: pointer;
+}
+
+.close-btn:hover {
+color: #333;
+}
+/* Karanlık Mod Stilleri */
+body.dark-mode {
+background-color: #2c3e50;
+color: #ecf0f1;
+}
+
+.container.dark-mode {
+background: linear-gradient(145deg, #34495e, #2c3e50);
+}
+.bst-visualization {
+max-width: 100%;
+height: auto;
+}
+
+.left-panel.dark-mode,
+.right-panel.dark-mode {
+background: linear-gradient(135deg, #34495e, #2c3e50);
+border-color: rgba(255, 255, 255, 0.1);
+}
+
+.center-panel.dark-mode {
+background-color: #34495e;
+box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.ister-item.dark-mode {
+background: #3b3b3b;
+color: #ecf0f1;
+box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1),
+            0 1px 3px rgba(255, 255, 255, 0.2);
+}
+
+.ister-input.dark-mode {
+background-color: #2c3e50;
+color: #ecf0f1;
+border-color: #4e5d6c;
+}
+
+.approve-button.dark-mode,
+.calculate-button.dark-mode {
+background-color: #1abc9c;
+color: #ecf0f1;
+}
+
+.error-box.dark-mode {
+background-color: #e74c3c;
+color: #ecf0f1;
+border-color: #c0392b;
+}
+/* İSTER çıktıları ve karanlık mod */
+.output-card.dark-mode {
+background-color: #2c3e50;
+color: #ecf0f1;
+border: 1px solid #4e5d6c;
+box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+step.dark-mode {
+background-color: #3b3b3b;
+color: #ecf0f1;
+box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+.error-box.dark-mode {
+background-color: #c0392b;
+color: #ecf0f1;
+border-color: #e74c3c;
+}
+
+/* Tema geçiş butonu stili */
+.theme-toggle {
+position: fixed;
+bottom: 20px;
+right: 20px;
+width: 50px;
+height: 50px;
+background-color: #ecf0f1;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+cursor: pointer;
+transition: all 0.3s ease-in-out;
+z-index: 1000;
+}
+
+.theme-toggle:hover {
+transform: scale(1.1);
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.theme-toggle span {
+font-size: 24px;
+transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.theme-toggle.dark-mode {
+background-color: #2c3e50;
+}
+
+.theme-toggle.dark-mode span {
+color: #ecf0f1;
+transform: rotate(180deg); /* Geçiş efekti */
+}
+
+/* Sol panel çıktı ekranı başlığı için karanlık mod */
+.dark-mode .panel-header {
+color: #ecf0f1;
+border-bottom-color: #4e5d6c;
+}
+
+/* Sol paneldeki çıktılar için karanlık mod */
+.dark-mode .step {
+background-color: #34495e;
+color: #ecf0f1;
+box-shadow: 0 2px 5px rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .step:hover {
+background-color: #2c3e50;
+box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .step p {
+color: #ecf0f1;
+}
+
+/* Sol panel çıktı başlığı için karanlık mod */
+.dark-mode #enes h3 {
+color: #ecf0f1;
+border-bottom-color: #4e5d6c;
+}
+
+/* Path detayları için karanlık mod */
+.dark-mode .path-detail {
+background-color: #3b3b3b;
+border-color: #4e5d6c;
+color: #ecf0f1;
+}
+
+.dark-mode .path-detail strong {
+color: #3498db;
+border-bottom-color: #4e5d6c;
+}
+
+.dark-mode .path-detail:hover {
+background-color: #3b3b3b;
+box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+/* Dark mode styles for popup */
+.popup.dark-mode {
+background: rgba(0, 0, 0, 0.7);
+}
+
+.popup-content.dark-mode {
+background: #2c3e50;
+color: #ecf0f1;
+box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.popup-content.dark-mode h2 {
+color: #ecf0f1;
+}
+
+.popup-content.dark-mode p {
+color: #bdc3c7;
+}
+
+.popup.dark-mode .article {
+border-bottom: 1px solid #34495e;
+}
+
+.popup.dark-mode .article p {
+color: #ecf0f1;
+}
+
+.popup.dark-mode .article a {
+color: #3498db;
+}
+
+.popup.dark-mode .article a:hover {
+color: #2980b9;
+}
+
+.close-btn.dark-mode {
+color: #ecf0f1;
+}
+
+.close-btn.dark-mode:hover {
+color: #bdc3c7;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="panel-content">
+                <h2 class="panel-header" id="enes">ÇIKTI EKRANI</h2>
+            </div>
+        </div>
+        <div class="theme-toggle" id="themeToggle">
+    <span id="icon">🌞</span>
+</div>
+
+
+
+<div class="center-panel">
+    <!-- Graph Container -->
+    <div id="graphContainer">
+        <svg id="graphSVG"></svg>  <!-- Graph SVG goes here -->
+    </div>
+<div id="popup" class="popup" style="display:none;">
+    <div class="popup-content">
+        <span class="close-btn" id="closePopup">&times;</span>
+
+        <h2 id="authorName"></h2>
+        <p id="authorOrcid"></p>
+
+        <div id="authorArticles" class="articles">
+            <!-- Articles will be dynamically inserted here -->
+        </div>
+    </div>
+</div>
+
+</div>
+
+        <div class="right-panel">
+            <div class="panel-content">
+                <div class="ister-container">
+                    <div class="ister-item" id="ister1">
+                        <label class="ister-label">1.İSTER</label>
+                        <input type="text" class="ister-input" id="idA" placeholder="ID A için giriş yapın...">
+                        <input type="text" class="ister-input" id="idB" placeholder="ID B için giriş yapın...">
+                        <button class="approve-button">Onayla</button>
+                    </div>
+                <div id="ister2" class="ister-item">
+                    <label class="ister-label">2.İSTER</label>
+                    <input type="text" id="idStartNode" class="ister-input" placeholder="Başlangıç Düğümü">
+                    <button class="approve-button">Hesapla</button>
+                </div>
+
+                    <div class="ister-item" id="ister3">
+                        <label class="ister-label">3.İSTER</label>
+                        <input type="text" class="ister-input" id="ister3ID" placeholder="1. İster ID'si...">
+                        <button class="approve-button">Onayla</button>
+                    </div>
+                    <div class="ister-item" id="ister4">
+                        <label class="ister-label">4.İSTER</label>
+                        <input type="text" class="ister-input" id="id4" placeholder="ID D için giriş yapın...">
+                        <button class="approve-button">Onayla</button>
+                    </div>
+                    <div class="ister-item" id="ister5">
+                        <label class="ister-label">5.İSTER</label>
+                        <input type="text" class="ister-input" id="idStartNode1" placeholder="ID E için giriş yapın...">
+                        <button class="approve-button">Onayla</button>
+                    </div>
+                    <div class="ister-item" id="ister6">
+                        <label class="ister-label">6. İSTER</label>
+                        <button class="calculate-button">Hesapla</button>
+                    </div>
+                    <div class="ister-item" id="ister7">
+                    <label class="ister-label">7. İSTER</label>
+                    <input type="text" class="ister-input" id="idF" placeholder="ID F için giriş yapın...">
+                    <button class="approve-button">Onayla</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+        // Onaylama işlevselliği
+        function setupInputValidation(inputs, button, validationCallback) {
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    if (validationCallback(inputs)) {
+                        button.disabled = false;
+                    } else {
+                        button.disabled = true;
+                    }
+                });
+            });
+        }
+
+        // Giriş doğrulama
+        function validateInputs(inputs) {
+            return inputs.every(input => input.value.trim() !== '');
+        }
+
+// Butonları etkileşimli hale getirme
+const buttons = document.querySelectorAll('.approve-button');
+buttons.forEach(button => {
+    const inputs = button.closest('.ister-item').querySelectorAll('.ister-input');
+
+    // Before performing action, clear the output below the "Çıktı:" header
+    button.addEventListener('click', () => {
+        const outputPanel = document.querySelector('#enes'); // Left panel output section
+
+        // Find and clear the content below the header
+        const outputContent = outputPanel.querySelector('p');
+        if (outputContent) {
+            outputContent.remove(); // Remove the paragraph or output below the header
+        }
+
+        // Then perform the normal button action
+        setupInputValidation(inputs, button, validateInputs);
+    });
+});
+// Button click for 1st "İSTER"
+const ister1Button = document.querySelector('#ister1 .approve-button');
+ister1Button.addEventListener('click', () => {
+    // Get the input values for start_node and end_node
+    const startNode = document.querySelector('#idA').value;
+    const endNode = document.querySelector('#idB').value;
+
+    // Fetch the output for /ister1 route
+    fetch('/ister1', {
+        method: 'POST',
+        body: new URLSearchParams({
+            start_node: startNode,
+            end_node: endNode
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Sunucudan geçersiz yanıt alındı');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const outputPanel = document.querySelector('#enes'); // Left panel output section
+
+        if (data.output) {
+            // Clear previous output and display the new one
+            outputPanel.innerHTML = `<h3>Çıktı Ekranı:</h3>`;
+            const steps = data.output.split("\n"); // Output split by newlines (steps)
+
+            steps.forEach(step => {
+                const stepDiv = document.createElement('div');
+                stepDiv.classList.add('step');  // You can style each step using this class
+                stepDiv.innerHTML = `<p>${step}</p>`; // Add each step in a paragraph
+                outputPanel.appendChild(stepDiv);
+            });
+
+            // Handle the additional yol_nesne field
+            if (data.yol_nesne) {
+                const yolNesneList = [];
+                data.yol_nesne.forEach(item => {
+                    yolNesneList.push(item);
+                });
+                highlightShortestPath(yolNesneList);
+            }
+        } else if (data.error) {
+            // Display error message
+            outputPanel.innerHTML = `<h3>Hata:</h3><p>${data.error}</p>`;
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        alert('Bir hata oluştu.');
+    });
+});
+
+
+
+
+const calculateButton = document.querySelector('.calculate-button');
+calculateButton.addEventListener('click', () => {
+    fetch('/ister6', { method: 'POST' })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Sunucudan geçersiz yanıt alındı');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const outputPanel = document.querySelector('#enes');
+            outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+
+            if (data.output) {
+                const outputCard = document.createElement('div');
+                outputCard.classList.add('output-card');
+
+                const pathDetails = document.createElement('div');
+                pathDetails.classList.add('path-details');
+
+                // Çıktıyı satırlara böl
+                const outputLines = data.output.split('\n');
+
+                // En kısa yollar listesi için div
+                if (outputLines[0]) {
+                    const pathsDiv = document.createElement('div');
+                    pathsDiv.classList.add('path-detail');
+                    pathsDiv.innerHTML = `<strong>En Kısa Yollar:</strong><br>${outputLines[0].replace('En kısa yollar:', '')}`;
+                    pathDetails.appendChild(pathsDiv);
+                }
+
+                // Toplam uzunluk için div
+                if (outputLines[1]) {
+                    const lengthDiv = document.createElement('div');
+                    lengthDiv.classList.add('path-detail');
+                    lengthDiv.innerHTML = `<strong>Toplam Uzunluk:</strong><br>${outputLines[1].replace('Toplam uzunluk:', '')}`;
+                    pathDetails.appendChild(lengthDiv);
+                }
+
+                outputCard.appendChild(pathDetails);
+                outputPanel.appendChild(outputCard);
+            } else if (data.error) {
+                const errorBox = document.createElement('div');
+                errorBox.classList.add('error-box');
+                errorBox.innerHTML = `<p><strong>Hata:</strong> ${data.error}</p>`;
+                outputPanel.appendChild(errorBox);
+            }
+        })
+        .catch(error => {
+            console.error('Hata:', error);
+            const outputPanel = document.querySelector('#enes');
+            outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+            const errorBox = document.createElement('div');
+            errorBox.classList.add('error-box');
+            errorBox.innerHTML = `<p><strong>Hata:</strong> ${error.message}</p>`;
+            outputPanel.appendChild(errorBox);
+        });
+});
+// Button click for 7th "İSTER"
+const ister7Button = document.querySelector('#ister7 .approve-button');
+ister7Button.addEventListener('click', () => {
+    // Get the input value
+    const startNode = document.querySelector('#idF').value; // Use input value or default to 'A'
+    fetch('/ister7', {
+    method: 'POST',
+    body: new URLSearchParams({
+        start_node: startNode
+    })
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Sunucudan geçersiz yanıt alındı');
+    }
+    return response.json();
+})
+.then(data => {
+
+    
+    const outputPanel = document.querySelector('#enes');
+    outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+
+    console.log('Received data:', data);
+
+    if (data && data.output) {
+        const outputCard = document.createElement('div');
+        outputCard.classList.add('output-card');
+
+        const pathDetails = document.createElement('div');
+        pathDetails.classList.add('path-details');
+
+        // Çıktıyı satırlara böl
+        const outputLines = data.output.split('\n');
+
+        // En uzun yol için div
+        if (outputLines[0]) {
+            const pathDiv = document.createElement('div');
+            pathDiv.classList.add('path-detail');
+            pathDiv.innerHTML = `<strong>En Uzun Yol:</strong><br>${outputLines[0].replace('En uzun yol: ', '')}`;
+            pathDetails.appendChild(pathDiv);
+        }
+
+        // Yol uzunluğu için div
+        if (outputLines[1]) {
+            const lengthDiv = document.createElement('div');
+            lengthDiv.classList.add('path-detail');
+            lengthDiv.innerHTML = `<strong>Yol Uzunluğu:</strong><br>${outputLines[1].replace('Yol uzunluğu: ', '')}`;
+            pathDetails.appendChild(lengthDiv);
+        }
+
+        outputCard.appendChild(pathDetails);
+        outputPanel.appendChild(outputCard);
+
+        if (data.path) {
+                const yolNesneList = [];
+                data.path.forEach(item => {
+                    yolNesneList.push(item);
+                });
+                highlightShortestPath(yolNesneList);
+            }
+    } else {
+        const errorBox = document.createElement('div');
+        errorBox.classList.add('error-box');
+        errorBox.innerHTML = `<p><strong>Hata:</strong> Sunucudan beklenen veri alınamadı. Alınan veri: ${JSON.stringify(data)}</p>`;
+        outputPanel.appendChild(errorBox);
+    }
+})
+.catch(error => {
+    console.error('Hata:', error);
+    const outputPanel = document.querySelector('#enes');
+    outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+    const errorBox = document.createElement('div');
+    errorBox.classList.add('error-box');
+    errorBox.innerHTML = `<p><strong>Hata:</strong> ${error.message}</p>`;
+    outputPanel.appendChild(errorBox);
+});
+});
+
+    // Button click for 2nd "İSTER"
+const ister2Button = document.querySelector('#ister2 .approve-button');
+ister2Button.addEventListener('click', () => {
+    // Get the input value for the start_node
+    const startNode = document.querySelector('#idStartNode').value; // Replace with your actual input field ID
+
+    // Fetch the output for /ister2 route
+    fetch('/ister2', {
+        method: 'POST',
+        body: new URLSearchParams({
+            start_node: startNode
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Sunucudan geçersiz yanıt alındı');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const outputPanel = document.querySelector('#enes'); // Left panel output section
+        outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+
+        if (data.output) {
+            const outputLines = data.output.split('\n');
+
+            // Create a div to hold the output
+            const outputCard = document.createElement('div');
+            outputCard.classList.add('output-card');
+
+            // For each step in the output, create a step div and add to the output panel
+            outputLines.forEach((line, index) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.classList.add('step');
+                stepDiv.innerHTML = `<h4>Adım ${index + 1}:</h4><p>${line}</p>`; // Adding step and output line
+                outputCard.appendChild(stepDiv);
+            });
+
+            outputPanel.appendChild(outputCard);
+        } else if (data.error) {
+            const errorBox = document.createElement('div');
+            errorBox.classList.add('error-box');
+            errorBox.innerHTML = `<p><strong>Hata:</strong> ${data.error}</p>`;
+            outputPanel.appendChild(errorBox);
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        const outputPanel = document.querySelector('#enes');
+        outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+        const errorBox = document.createElement('div');
+        errorBox.classList.add('error-box');
+        errorBox.innerHTML = `<p><strong>Hata:</strong> ${error.message}</p>`;
+        outputPanel.appendChild(errorBox);
+    });
+});
+const ister3Button = document.querySelector('#ister3 .approve-button');
+ister3Button.addEventListener('click', () => {
+    // Get the input value for the start_node
+    const startNode = document.querySelector('#ister3ID').value; // Changed ID to ister3ID
+
+    // Fetch the output for /ister3 route
+    fetch('/ister3', {
+        method: 'POST',
+        body: new URLSearchParams({
+            start_node: startNode
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Sunucudan geçersiz yanıt alındı');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const outputPanel = document.querySelector('#enes');
+        outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+
+        if (data.output) { // Changed from data.success to data.output
+            const outputCard = document.createElement('div');
+            outputCard.classList.add('output-card');
+
+            if (data.image) {
+                const img = document.createElement('img');
+                img.src = `data:image/png;base64,${data.image}`;
+                img.classList.add('bst-visualization');
+                outputCard.appendChild(img);
+            }
+            
+            // Add text output if exists
+            if (data.output) {
+                const textOutput = document.createElement('p');
+                textOutput.textContent = data.output;
+                outputCard.appendChild(textOutput);
+            }
+
+            outputPanel.appendChild(outputCard);
+        } else {
+            const errorBox = document.createElement('div');
+            errorBox.classList.add('error-box');
+            errorBox.innerHTML = `<p><strong>Hata:</strong> Veri bulunamadı</p>`;
+            outputPanel.appendChild(errorBox);
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        const outputPanel = document.querySelector('#enes');
+        outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+        const errorBox = document.createElement('div');
+        errorBox.classList.add('error-box');
+        errorBox.innerHTML = `<p><strong>Hata:</strong> ${error.message}</p>`;
+        outputPanel.appendChild(errorBox);
+    });
+});
+const ister4Button = document.querySelector('#ister4 .approve-button');
+ister4Button.addEventListener('click', () => {
+    const startNode = document.querySelector('#id4').value;
+
+    fetch('/ister4', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ start_node: startNode })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Invalid response from server');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const outputPanel = document.querySelector('#enes');
+        outputPanel.innerHTML = '<h3>Output Screen:</h3>';
+
+        if (data.success) {
+            const steps = data.output.split("\n");
+            steps.forEach(step => {
+                const stepDiv = document.createElement('div');
+                stepDiv.classList.add('step');
+                stepDiv.innerHTML = `<p>${step}</p>`;
+                outputPanel.appendChild(stepDiv);
+            });
+            if (data.path) {
+                const yolNesneList = [[]];
+                data.path.forEach(item => {
+                    yolNesneList.push(item);
+                });
+                yolNesneList.forEach(row =>{
+                highlightShortestPath(row);
+            }); 
+            }
+        } else {
+            const errorBox = document.createElement('div');
+            errorBox.classList.add('error-box');
+            errorBox.innerHTML = `<p><strong>Error:</strong> ${data.error}</p>`;
+            outputPanel.appendChild(errorBox);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        const outputPanel = document.querySelector('#enes');
+        outputPanel.innerHTML = '<h3>Output Screen:</h3>';
+        const errorBox = document.createElement('div');
+        errorBox.classList.add('error-box');
+        errorBox.innerHTML = `<p><strong>Error:</strong> ${error.message}</p>`;
+        outputPanel.appendChild(errorBox);
+    });
+});
+document.addEventListener("DOMContentLoaded", function() {
+    // Grafiği başlangıçta yükle
+    fetch('/get_graph_data')
+        .then(response => response.json())
+        .then(data => {
+            drawGraph(data.nodes, data.links); // İlk grafiği çizmek için bir işlev
+        })
+        .catch(error => console.error('Error fetching graph data:', error));
+
+    // "Onayla" butonuna tıklama olayını yakala
+    document.querySelector(".approve-button").addEventListener("click", function() {
+        // Kullanıcıdan ID A ve ID B girişlerini al
+        const idA = document.querySelector("#idA").value.trim();
+        const idB = document.querySelector("#idB").value.trim();
+
+        if (!idA || !idB) {
+            alert("Lütfen hem ID A hem de ID B alanlarını doldurun!");
+            return;
+        }
+
+        // En kısa yolu bul ve grafiği güncelle
+        fetchShortestPath(idA, idB);
+    });
+});
+
+// Grafiği başlangıçta çizen işlev
+function drawGraph(nodes, links) {
+    const container = d3.select("#graphContainer");
+    const width = container.node().getBoundingClientRect().width;
+    const height = container.node().getBoundingClientRect().height;
+
+    const svg = d3.select("#graphSVG");
+
+    // Zoom ve sürükleme için ayarlar
+    const zoom = d3.zoom()
+        .scaleExtent([0, 5]) // Zoom limiti
+        .on("zoom", function(event) {
+            svg.select("g").attr("transform", event.transform);
+        });
+    svg.call(zoom);
+
+    // Simülasyon ve grafik grubu
+    const simulation = d3.forceSimulation(nodes)
+        .force("link", d3.forceLink(links).id(d => d.id).distance(200))
+        .force("charge", d3.forceManyBody().strength(-300))
+        .force("center", d3.forceCenter(width / 2, height / 2));
+
+    const graphGroup = svg.append("g");
+
+    // Bağlantılar
+    const link = graphGroup.append("g")
+        .attr("class", "links")
+        .selectAll("line")
+        .data(links)
+        .enter().append("line")
+        .attr("class", "link")
+        .attr("stroke-width", 2)
+        .attr("stroke", "#57607A");
+
+    // Düğümler
+    const node = graphGroup.append("g")
+        .attr("class", "nodes")
+        .selectAll("circle")
+        .data(nodes)
+        .enter().append("circle")
+        .attr("class", "node")
+        .attr("r", d => Math.sqrt(d.articles.length) * 10)
+        .attr("fill", d => {
+            if (d.articles.length > 15) return "cornflowerblue";
+            else if (d.articles.length > 7) return "red";
+            else return "#c8d5ff";
+        })
+        .on("click", function(event, d) {
+                    // Only show the popup if the node has valid data
+                    if (d.full_name && d.orcid) {
+                        showPopup(d);  // Show the popup with the clicked node's data
+                    }
+                });
+
+    // Etiketler
+    const labels = graphGroup.append("g")
+        .attr("class", "labels")
+        .selectAll("text")
+        .data(nodes)
+        .enter().append("text")
+        .attr("class", "label")
+        .attr("fill", "black")
+        .text(d => d.full_name);
+
+    // Simülasyon güncellemeleri
+    simulation.on("tick", function() {
+        link
+            .attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y);
+
+        node
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y);
+
+        labels
+            .attr("x", d => d.x)
+            .attr("y", d => d.y);
+    });
+}
+
+function highlightShortestPath(pathNodes) {
+    console.log("Highlighting path for nodes:", pathNodes);  // Debugging log
+
+    // Highlight nodes in the shortest path
+    d3.selectAll(".node")
+        .filter(d => pathNodes.includes(d.orcid))
+        .attr("fill", "pink");
+
+    // Highlight links in the shortest path
+    d3.selectAll(".link")
+        .filter(d => {
+            for (let i = 0; i < pathNodes.length - 1; i++) {
+                if ((d.source.orcid === pathNodes[i] && d.target.orcid === pathNodes[i + 1]) ||
+                    (d.source.orcid === pathNodes[i + 1] && d.target.orcid === pathNodes[i])) {
+                    return true;
+                }
+            }
+            return false;
+        })
+        .attr("stroke", "pink")
+        .attr("stroke-width", 4);
+}
+// Show popup with node data
+function showPopup(nodeData) {
+    // Populate the popup content dynamically
+    document.getElementById("authorName").innerText = nodeData.full_name;
+    document.getElementById("authorOrcid").innerText = "ORCID: " + nodeData.orcid;
+    document.getElementById("authorArticles").innerHTML = nodeData.articles
+        .map(article => {
+            return `<div class="article">
+                        <p><strong>Title:</strong> ${article.name}</p>
+                        <p><strong>DOI:</strong> <a href="https://doi.org/${article.doi}" target="_blank">${article.doi}</a></p>
+                        <p><strong>Coauthors:</strong> ${article.coauthors.join(", ")}</p>
+                    </div>`;
+        })
+        .join("");
+
+    // Show the popup
+    const popup = document.getElementById("popup");
+    popup.style.display = "block";
+}
+
+// Close the popup when clicking outside or on the close button
+document.getElementById("closePopup").addEventListener("click", closePopup);
+window.addEventListener("click", function(event) {
+    const popup = document.getElementById("popup");
+    if (event.target === popup) {
+        closePopup();
+    }
+});
+
+// Close the popup
+function closePopup() {
+    document.getElementById("popup").style.display = "none";
+}
+// Button click for 5th "İSTER"
+const ister5Button = document.querySelector('#ister5 .approve-button');
+ister5Button.addEventListener('click', () => {
+    // Get the input value for the start_node
+    const startNode = document.querySelector('#idStartNode1').value;
+
+    // Fetch the output for /ister5 route
+    fetch('/ister5', {
+        method: 'POST',
+        body: new URLSearchParams({
+            start_node: startNode
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Sunucudan geçersiz yanıt alındı');
+        }
+        return response.json();
+    })
+    .then(data => {
+    console.log('Response Data:', data); // Debugging line
+    const outputPanel = document.querySelector('#enes'); // Left panel output section
+    outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+
+    if (data.output) {
+        const outputCard = document.createElement('div');
+        outputCard.classList.add('output-card');
+        const collaboratorsDiv = document.createElement('div');
+        collaboratorsDiv.classList.add('step');
+        collaboratorsDiv.innerHTML = `<h4>Sonuç:</h4><p>${data.output[0]}</p>`;
+        outputCard.appendChild(collaboratorsDiv);
+        outputPanel.appendChild(outputCard);
+    } else if (data.error) {
+        const errorBox = document.createElement('div');
+        errorBox.classList.add('error-box');
+        errorBox.innerHTML = `<p><strong>Hata:</strong> ${data.error}</p>`;
+        outputPanel.appendChild(errorBox);
+    }
+})
+    .catch(error => {
+        console.error('Hata:', error);
+        const outputPanel = document.querySelector('#enes');
+        outputPanel.innerHTML = '<h3>Çıktı Ekranı:</h3>';
+        const errorBox = document.createElement('div');
+        errorBox.classList.add('error-box');
+        errorBox.innerHTML = `<p><strong>Hata:</strong> ${error.message}</p>`;
+        outputPanel.appendChild(errorBox);
+    });
+});
+
+// Tema geçişi işlevi
+const themeToggle = document.getElementById("themeToggle");
+const icon = document.getElementById("icon");
+
+// Kaydedilen temayı yükle
+const savedTheme = localStorage.getItem("theme") || "light";
+setTheme(savedTheme);
+
+// Tema değişimi butonuna tıklama işlevi
+themeToggle.addEventListener("click", () => {
+    const currentTheme = document.body.classList.contains("dark-mode") ? "light" : "dark";
+    setTheme(currentTheme);
+});
+
+function setTheme(theme) {
+    const isDark = theme === "dark";
+    document.body.classList.toggle("dark-mode", isDark);
+    themeToggle.classList.toggle("dark-mode", isDark);
+    document.querySelectorAll(
+        '.container, .left-panel, .center-panel, .right-panel, .ister-item, .ister-input, .approve-button, .calculate-button, .error-box, .output-card, .step, .panel-header, .path-detail, #enes h3,.popup, .popup-content, .close-btn'
+    ).forEach(el => el.classList.toggle('dark-mode', isDark));
+    icon.textContent = isDark ? "🌙" : "🌞";
+    localStorage.setItem("theme", theme);
+}
+
+// Dinamik olarak oluşturulan İSTER çıktıları için karanlık mod kontrolü
+function addOutputCard(content) {
+    const outputCard = document.createElement('div');
+    outputCard.classList.add('output-card');
+    if (document.body.classList.contains('dark-mode')) {
+        outputCard.classList.add('dark-mode'); // Karanlık mod sınıfını ekle
+    }
+    outputCard.innerHTML = `<h4>Sonuç:</h4><p>${content}</p>`;
+    document.querySelector('#outputContainer').appendChild(outputCard);
+}
+
+
+    </script>
+</body>
+</html>
