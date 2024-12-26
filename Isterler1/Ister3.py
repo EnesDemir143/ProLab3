@@ -3,29 +3,29 @@ import matplotlib  # type: ignore
 matplotlib.use('Agg')  # GUI yerine arka planda çalışır
 import matplotlib.pyplot as plt  # type: ignore
 from Objects.Author import Author
-
 class AVLTree:
     class Node:
         def __init__(self, data):
-            self.data = data  # Tuple: (cost, object)
-            self.cost = data[0]  # Cost is the first element of tuple
+            self.data = data  # Tuple: (index, Author object)
+            self.cost = data[0]  # Index is used as cost for ordering
             self.left = None
             self.right = None
-            self.height = 1  # Height of node for balancing
+            self.height = 1
 
     def __init__(self):
         self.root = None
 
     def insert(self, data):
+        """Insert a tuple of (index, Author object)"""
         if not isinstance(data, tuple):
-            raise ValueError("Data must be a tuple")
+            raise ValueError("Data must be a tuple of (index, Author)")
         self.root = self._insert(self.root, data)
 
     def _insert(self, node, data):
         if node is None:
             return self.Node(data)
 
-        cost = data[0]  # Compare by cost
+        cost = data[0]  # Compare by index
         if cost < node.cost:
             node.left = self._insert(node.left, data)
         else:
@@ -54,15 +54,12 @@ class AVLTree:
 
         return node
 
-    def delete(self, data):
-        if isinstance(data, tuple):
-            cost = data[0]  # Eğer data tuple ise cost'u al
-        else:
-            node_to_delete = self._search_by_object(self.root, data)
-            if node_to_delete is None:
-                raise ValueError(f"Object '{data}' not found in the tree.")
-            cost = node_to_delete.cost  # Nesnenin maliyetini al
-        self.root = self._delete(self.root, cost)
+    def delete(self, author):
+        """Delete by Author object"""
+        node_to_delete = self._search_by_author(self.root, author)
+        if node_to_delete is None:
+            raise ValueError(f"Author not found in the tree")
+        self.root = self._delete(self.root, node_to_delete.cost)
 
     def _delete(self, node, cost):
         if node is None:
@@ -82,6 +79,9 @@ class AVLTree:
             node.data = temp.data
             node.cost = temp.cost
             node.right = self._delete(node.right, temp.cost)
+
+        if node is None:
+            return node
 
         node.height = 1 + max(self._get_height(node.left), self._get_height(node.right))
         balance = self._get_balance(node)
@@ -146,15 +146,15 @@ class AVLTree:
             current = current.left
         return current
 
-    def _search_by_object(self, node, obj):
+    def _search_by_author(self, node, author):
         if node is None:
             return None
-        if node.data[1] == obj:
+        if node.data[1] == author:
             return node
-        left_result = self._search_by_object(node.left, obj)
+        left_result = self._search_by_author(node.left, author)
         if left_result is not None:
             return left_result
-        return self._search_by_object(node.right, obj)
+        return self._search_by_author(node.right, author)
 
     def visualize(self, output_file=None):
         G = nx.DiGraph()
@@ -162,19 +162,17 @@ class AVLTree:
 
         def add_edges(node, x=0, y=0, level=0):
             if node is not None:
-                orcid = getattr(node.data[1], 'name', 'Unknown')
-                node_label = f"{orcid}"
+                author = node.data[1]
+                node_label = f"{author.name}"  # Using author name for visualization
 
                 G.add_node(node_label)
                 pos[node_label] = (x, -y)
                 if node.left:
-                    left_orcid = getattr(node.left.data[1], 'name', 'Unknown')
-                    left_label = f"{left_orcid}"
+                    left_label = f"{node.left.data[1].name}"
                     G.add_edge(node_label, left_label)
                     add_edges(node.left, x - 2 ** (-level - 1), y + 1, level + 1)
                 if node.right:
-                    right_orcid = getattr(node.right.data[1], 'name', 'Unknown')
-                    right_label = f"{right_orcid}"
+                    right_label = f"{node.right.data[1].name}"
                     G.add_edge(node_label, right_label)
                     add_edges(node.right, x + 2 ** (-level - 1), y + 1, level + 1)
 
@@ -184,5 +182,6 @@ class AVLTree:
                 node_size=2000, font_size=8, font_weight="bold", arrows=False)
         if output_file:
             plt.savefig(output_file)
+            plt.close()  # Close the figure to free memory
         else:
             plt.show()

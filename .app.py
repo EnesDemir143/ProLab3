@@ -118,12 +118,12 @@ def ister3():
 
         # AVLTree işlemleri
         avl_tree = AVLTree()
-        author_list = [(author.orcid, author) for author in queue]  # Convert to list of tuples
+        author_list = [(i+1, author) for i, author in enumerate(queue)]
         for author in author_list:
             avl_tree.insert(author)
 
         # Start node'u ağaca uygun formatta sil
-        avl_tree.delete((orcid_to_author[start_node].orcid, orcid_to_author[start_node]))
+        avl_tree.delete( orcid_to_author[start_node])
 
         # Görselleştirme dosyası oluştur
         temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
