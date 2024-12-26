@@ -27,7 +27,7 @@ class Graph:
 
             for coauthor_name in coauthors:
                 if coauthor_name not in name_to_author:
-                    author = Author(a, coauthor_name)
+                    author = Author(str(a), coauthor_name)
                     name_to_author[coauthor_name] = author
                     orcid_to_author[str(a)] = author
                     collaboration_graph[author] = defaultdict(int)

@@ -11,7 +11,7 @@ from flask import Flask, render_template, request, jsonify
 from CreateGraph.Graph import Graph
 from Heap1.Heap import Heap
 from Isterler1.Ister1 import Ister1
-from Isterler1.Ister3 import BST
+from Isterler1.Ister3 import AVLTree
 from Isterler1.Ister4 import Ister4
 from Isterler1.Ister5 import Ister5
 from Isterler1.Ister6 import Ister6
@@ -20,7 +20,7 @@ from ReadData.data import df
 
 
 app = Flask(__name__,template_folder='templates')
- # Bu, CORS hatalarını önleyecektir.
+
 
 # Initialize the graph once at the start
 queue=[]
@@ -84,17 +84,16 @@ def ister2():
     return response
 
 
-# Route'unuzda
+
 @app.route('/ister3', methods=['POST'])
 def ister3():
-    global queue,orcid_to_author,name_to_author
+    global queue, orcid_to_author, name_to_author
     try:
         # Debug için queue durumunu yazdır
         print("Queue status:", queue)
         print("Queue length:", len(queue) if queue else 0)
         
         # Queue boş ise initialize et
-    
         if not queue:
             queue = list(orcid_to_author.values())
             print("Queue initialized with:", len(queue), "items")
@@ -116,18 +115,19 @@ def ister3():
                 'success': True  # Frontend true bekliyor
             })
 
-        # BST işlemleri
-        bst = BST()
-        for step in queue:
-            bst.insert(step)
+        # AVLTree işlemleri
+        avl_tree = AVLTree()
+        author_list = [(author.orcid, author) for author in queue]  # Convert to list of tuples
+        for author in author_list:
+            avl_tree.insert(author)
 
         # Start node'u ağaca uygun formatta sil
-        bst.delete(orcid_to_author[start_node])
+        avl_tree.delete((orcid_to_author[start_node].orcid, orcid_to_author[start_node]))
 
         # Görselleştirme dosyası oluştur
         temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
         temp_file.close()
-        bst.visualize(temp_file.name)
+        avl_tree.visualize(temp_file.name)
 
         with open(temp_file.name, 'rb') as f:
             img_data = f.read()
@@ -141,12 +141,11 @@ def ister3():
             'image': img_base64,
             'success': True
         })
-
     except Exception as e:
         print("Error:", str(e))
         return jsonify({
-            'output': f'Hata: {str(e)}',
-            'success': True  # Frontend true bekliyor
+            'output': 'Bir hata oluştu',
+            'success': False
         })
 
 @app.route('/ister4', methods=['POST'])
@@ -220,7 +219,7 @@ def ister1():
         maliyet, yol, history,queue= Ister1.dijkstra(collaboration_graph,
                                                 orcid_to_author[start_node],
                                                 orcid_to_author[end_node])
-
+        queue = yol
         output_lines = []
         for i, step in enumerate(history, 1):
             output_lines.append(f"\nAdım {i}:")

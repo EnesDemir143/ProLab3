@@ -29,9 +29,10 @@ class Ister1:
         while min_heap:
             history.append({k: {"cost": v["cost"], "path": v["path"].copy()} for k, v in node_Data.items()})
             _ , temp = min_heap[0]
-            queue.append(Heap.heapPop(min_heap, len(min_heap), 0))
+            Heap.heapPop(min_heap, len(min_heap), 0)
 
             if temp == dest:
+                print(type(node_Data[dest]["path"]))
                 return str(node_Data[dest]["cost"]), node_Data[dest]["path"], history,queue
 
             if temp in visited_Nodes:

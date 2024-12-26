@@ -1232,6 +1232,10 @@ ister3Button.addEventListener('click', () => {
                 const img = document.createElement('img');
                 img.src = `data:image/png;base64,${data.image}`;
                 img.classList.add('bst-visualization');
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', () => {
+                    showFullScreenImage(img.src);
+                });
                 outputCard.appendChild(img);
             }
             
@@ -1260,6 +1264,41 @@ ister3Button.addEventListener('click', () => {
         outputPanel.appendChild(errorBox);
     });
 });
+
+function showFullScreenImage(src) {
+    const fullScreenDiv = document.createElement('div');
+    fullScreenDiv.style.position = 'fixed';
+    fullScreenDiv.style.top = '0';
+    fullScreenDiv.style.left = '0';
+    fullScreenDiv.style.width = '100%';
+    fullScreenDiv.style.height = '100%';
+    fullScreenDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    fullScreenDiv.style.display = 'flex';
+    fullScreenDiv.style.justifyContent = 'center';
+    fullScreenDiv.style.alignItems = 'center';
+    fullScreenDiv.style.zIndex = '1000';
+
+    const img = document.createElement('img');
+    img.src = src;
+    img.style.maxWidth = '90%';
+    img.style.maxHeight = '90%';
+    fullScreenDiv.appendChild(img);
+
+    const closeButton = document.createElement('span');
+    closeButton.textContent = '×';
+    closeButton.style.position = 'absolute';
+    closeButton.style.top = '20px';
+    closeButton.style.right = '30px';
+    closeButton.style.fontSize = '40px';
+    closeButton.style.color = 'white';
+    closeButton.style.cursor = 'pointer';
+    closeButton.addEventListener('click', () => {
+        document.body.removeChild(fullScreenDiv);
+    });
+    fullScreenDiv.appendChild(closeButton);
+
+    document.body.appendChild(fullScreenDiv);
+}
 const ister4Button = document.querySelector('#ister4 .approve-button');
 ister4Button.addEventListener('click', () => {
     const startNode = document.querySelector('#id4').value;
@@ -1415,8 +1454,8 @@ function highlightShortestPath(pathNodes) {
     d3.selectAll(".node")
         .filter(d => pathNodes.includes(d.orcid))
         .transition()
-        .duration(250)  // Half second duration
-        .delay((d, i) => i * 1500)  // Delay each node by 250ms
+        .duration(1000)  // Half second duration
+        .delay((d, i) => i * 500)  // Delay each node by 250ms
         .attr("fill", "pink");
 
     // Highlight links in the shortest path with a delay
@@ -1431,7 +1470,7 @@ function highlightShortestPath(pathNodes) {
             return false;
         })
         .transition()
-        .duration(1500)  // Half second duration
+        .duration(1000)  // Half second duration
         .delay((d, i) => pathNodes.indexOf(d.source.orcid) * 250)  // Delay links based on the first node
         .attr("stroke", "pink")
         .attr("stroke-width", 4);
