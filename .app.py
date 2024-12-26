@@ -65,6 +65,7 @@ def ister2():
         priority_Queue = []
         if start_node_orcid in orcid_to_author:
             start_node = orcid_to_author[start_node_orcid]
+            Heap.heapPush(priority_Queue,len(priority_Queue),(len(collaboration_graph[start_node]),start_node))
             for coauthor, weight in collaboration_graph[start_node].items():
                 Heap.heapPush(priority_Queue, len(priority_Queue), (weight, coauthor))
         else:
