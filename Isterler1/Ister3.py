@@ -2,6 +2,7 @@ import networkx as nx  # type: ignore
 import matplotlib  # type: ignore
 matplotlib.use('Agg')  # GUI yerine arka planda çalışır
 import matplotlib.pyplot as plt  # type: ignore
+from Objects.Author import Author
 
 class AVLTree:
     class Node:
@@ -161,19 +162,19 @@ class AVLTree:
 
         def add_edges(node, x=0, y=0, level=0):
             if node is not None:
-                orcid = getattr(node.data[1], 'orcid', 'Unknown')
-                node_label = f"ORCID: {orcid}"
+                orcid = getattr(node.data[1], 'name', 'Unknown')
+                node_label = f"{orcid}"
 
                 G.add_node(node_label)
                 pos[node_label] = (x, -y)
                 if node.left:
-                    left_orcid = getattr(node.left.data[1], 'orcid', 'Unknown')
-                    left_label = f"ORCID: {left_orcid}"
+                    left_orcid = getattr(node.left.data[1], 'name', 'Unknown')
+                    left_label = f"{left_orcid}"
                     G.add_edge(node_label, left_label)
                     add_edges(node.left, x - 2 ** (-level - 1), y + 1, level + 1)
                 if node.right:
-                    right_orcid = getattr(node.right.data[1], 'orcid', 'Unknown')
-                    right_label = f"ORCID: {right_orcid}"
+                    right_orcid = getattr(node.right.data[1], 'name', 'Unknown')
+                    right_label = f"{right_orcid}"
                     G.add_edge(node_label, right_label)
                     add_edges(node.right, x + 2 ** (-level - 1), y + 1, level + 1)
 
