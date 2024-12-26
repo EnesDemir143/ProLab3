@@ -1005,6 +1005,7 @@ ister1Button.addEventListener('click', () => {
 
 const calculateButton = document.querySelector('.calculate-button');
 calculateButton.addEventListener('click', () => {
+    resetPathHighlighting()
     fetch('/ister6', { method: 'POST' })
         .then(response => {
             if (!response.ok) {
@@ -1151,7 +1152,7 @@ const ister2Button = document.querySelector('#ister2 .approve-button');
 ister2Button.addEventListener('click', () => {
     // Get the input value for the start_node
     const startNode = document.querySelector('#idStartNode').value; // Replace with your actual input field ID
-
+    resetPathHighlighting()
     // Fetch the output for /ister2 route
     fetch('/ister2', {
         method: 'POST',
@@ -1185,6 +1186,12 @@ ister2Button.addEventListener('click', () => {
             });
 
             outputPanel.appendChild(outputCard);
+
+            if (data.orcid) {
+                    d3.selectAll(".node")
+                        .filter(d => d.orcid === data.orcid)
+                        .attr("fill", "pink");
+                }
         } else if (data.error) {
             const errorBox = document.createElement('div');
             errorBox.classList.add('error-box');
@@ -1446,8 +1453,23 @@ function drawGraph(nodes, links) {
             .attr("y", d => d.y);
     });
 }
+function resetPathHighlighting() {
+    // Reset node colors
+    d3.selectAll(".node")
+        .attr("fill", d => {
+            // Restore original coloring logic
+            if (d.articles.length > 15) return "cornflowerblue";
+            else if (d.articles.length > 7) return "red";
+            else return "#c8d5ff";
+        });
 
+    // Reset link styling
+    d3.selectAll(".link")
+        .attr("stroke", "#57607A")  // Original color
+        .attr("stroke-width", 2);    // Original width
+}
 function highlightShortestPath(pathNodes) {
+    resetPathHighlighting()
     console.log("Highlighting path for nodes:", pathNodes);  // Debugging log
 
     // Highlight nodes in the shortest path with a delay
@@ -1513,7 +1535,7 @@ const ister5Button = document.querySelector('#ister5 .approve-button');
 ister5Button.addEventListener('click', () => {
     // Get the input value for the start_node
     const startNode = document.querySelector('#idStartNode1').value;
-
+    resetPathHighlighting()
     // Fetch the output for /ister5 route
     fetch('/ister5', {
         method: 'POST',

@@ -70,7 +70,6 @@ def ister2():
                 Heap.heapPush(priority_Queue, len(priority_Queue), (weight, coauthor))
         else:
             print(f"Start node '{start_node_orcid}' not found in the graph.")
-        print(priority_Queue)
         while priority_Queue:
             value, yazar = Heap.heapPop(priority_Queue, len(priority_Queue), 0)
             print(f"yazar: {yazar.name}, value: {value}")
@@ -78,7 +77,7 @@ def ister2():
     if not output_text:
         return jsonify({'error': 'Çıktı üretilemedi.'}), 500
     response = app.response_class( 
-        response=json.dumps({'output': output_text}, ensure_ascii=False),
+        response=json.dumps({'output': output_text,'orcid': start_node_orcid}, ensure_ascii=False),
         status=200,
         mimetype='application/json'
     )
