@@ -77,7 +77,7 @@ def ister2():
     output_text = output.getvalue().strip()
     if not output_text:
         return jsonify({'error': 'Çıktı üretilemedi.'}), 500
-    response = app.response_class(
+    response = app.response_class( 
         response=json.dumps({'output': output_text}, ensure_ascii=False),
         status=200,
         mimetype='application/json'
