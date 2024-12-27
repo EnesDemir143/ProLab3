@@ -1031,7 +1031,7 @@ calculateButton.addEventListener('click', () => {
                 if (outputLines[0]) {
                     const pathsDiv = document.createElement('div');
                     pathsDiv.classList.add('path-detail');
-                    pathsDiv.innerHTML = `<strong>En Kısa Yollar:</strong><br>${outputLines[0].replace('En kısa yollar:', '')}`;
+                    pathsDiv.innerHTML = `<strong>EN ÇOK İŞ BİRLİĞİ YAPAN YAZAR:</strong><br>${outputLines[0].replace('En kısa yollar:', '')}`;
                     pathDetails.appendChild(pathsDiv);
                 }
 
@@ -1039,7 +1039,7 @@ calculateButton.addEventListener('click', () => {
                 if (outputLines[1]) {
                     const lengthDiv = document.createElement('div');
                     lengthDiv.classList.add('path-detail');
-                    lengthDiv.innerHTML = `<strong>Toplam Uzunluk:</strong><br>${outputLines[1].replace('Toplam uzunluk:', '')}`;
+                    lengthDiv.innerHTML = `<strong>TOPLAM İŞ BİRLİĞİ SAYISI:</strong><br>${outputLines[1].replace('Toplam uzunluk:', '')}`;
                     pathDetails.appendChild(lengthDiv);
                 }
 

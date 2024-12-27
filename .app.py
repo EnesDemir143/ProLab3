@@ -44,8 +44,8 @@ def index():
 def ister6():
     with capture_output() as output:
         x, y = Ister6.en_cok_isbirligi_yapan_yazari_bul(collaboration_graph)
-        print("En çok iş birliği yapan yazar:{}".format(x.name))
-        print("İş birliği sayısı:{}".format(y))
+        print("{}".format(x.name))
+        print("{}".format(y))
     output_text = output.getvalue().strip()
     print(x)
     if not output_text:
@@ -174,7 +174,7 @@ def ister4():
                 cost, nodes = path[:2]
                 node_names = [node.name for node in nodes]
                 paths.append([name_to_author[node.name].orcid for node in nodes])
-                output.append(f"Path from {start.name} to {author.name}: {' -> '.join(node_names)} with cost {cost}")
+                output.append(f" YAZAR {start.name}'dan  YAZAR {author.name} 'a: {' -> '.join(node_names)}  YOL MALİYETİ: {cost}")
 
         output_text = '\n'.join(output)
         print("Çıktı hazırlandı.")
@@ -199,7 +199,7 @@ def ister5():
     name, orcid, count = Ister5.calculate_collaborators_count(collaboration_graph, start_node)
 
     with capture_output() as output:
-        print(f"Number of collaborators for author {name} (ORCID: {orcid}): {count}")
+        print(f"YAZAR {name} (ORCID: {orcid}) İşbirliği sayısı: {count}")
 
     output_text = output.getvalue().strip()
 
