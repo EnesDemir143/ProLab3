@@ -72,7 +72,7 @@ def ister2():
             print(f"Start node '{start_node_orcid}' not found in the graph.")
         while priority_Queue:
             value, yazar = Heap.heapPop(priority_Queue, len(priority_Queue), 0)
-            print(f"yazar: {yazar.name}, value: {value}")
+            print(f"yazar: {yazar.name}, Makale Sayısı: {value}")
     output_text = output.getvalue().strip()
     if not output_text:
         return jsonify({'error': 'Çıktı üretilemedi.'}), 500
