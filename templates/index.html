@@ -1176,12 +1176,17 @@ ister2Button.addEventListener('click', () => {
             // Create a div to hold the output
             const outputCard = document.createElement('div');
             outputCard.classList.add('output-card');
-
+            a=1;
             // For each step in the output, create a step div and add to the output panel
             outputLines.forEach((line, index) => {
                 const stepDiv = document.createElement('div');
                 stepDiv.classList.add('step');
-                stepDiv.innerHTML = `<h4>Adım ${index + 1}:</h4><p>${line}</p>`; // Adding step and output line
+                if (a===1){
+                    stepDiv.innerHTML = `<h4></h4><p>${line}</p>`;
+                    a+=1;
+                }else{
+                    stepDiv.innerHTML = `<h4>Adım ${index }:</h4><p>${line}</p>`; // Adding step and output line
+                }
                 outputCard.appendChild(stepDiv);
             });
 

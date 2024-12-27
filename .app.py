@@ -70,6 +70,7 @@ def ister2():
                 Heap.heapPush(priority_Queue, len(priority_Queue), (weight, coauthor))
         else:
             print(f"Start node '{start_node_orcid}' not found in the graph.")
+        print("Priority Queue(Artan sıralamalı)")
         while priority_Queue:
             value, yazar = Heap.heapPop(priority_Queue, len(priority_Queue), 0)
             print(f"yazar: {yazar.name}, Makale Sayısı: {value}")
@@ -89,6 +90,7 @@ def ister2():
 def ister3():
     global queue, orcid_to_author, name_to_author
     try:
+        temp =  queue
         # Debug için queue durumunu yazdır
         print("Queue status:", queue)
         print("Queue length:", len(queue) if queue else 0)
@@ -135,9 +137,9 @@ def ister3():
 
         # Geçici dosyayı temizle
         os.remove(temp_file.name)
-
+        queue = temp
         return jsonify({
-            'output': f'Düğüm {start_node} başarıyla işlendi',
+            'output': f'Düğüm {orcid_to_author[start_node].name} başarıyla silindi.',
             'image': img_base64,
             'success': True
         })
@@ -221,6 +223,9 @@ def ister1():
                                                 orcid_to_author[end_node])
         queue = yol
         output_lines = []
+        output_lines.append(f"En kısa yol maliyeti: {maliyet}")
+        yol_names = [node.name for node in yol]
+        output_lines.append(f"Yol: {' -> '.join(yol_names)}")
         for i, step in enumerate(history, 1):
             output_lines.append(f"\nAdım {i}:")
             for node, data in step.items():
@@ -228,9 +233,7 @@ def ister1():
                 path_names = [p.name for p in data['path']]
                 output_lines.append(f"{node_name}: Maliyet = {data['cost']}, Yol = {' -> '.join(path_names)}")
 
-        output_lines.append(f"En kısa yol maliyeti: {maliyet}")
-        yol_names = [node.name for node in yol]
-        output_lines.append(f"Yol: {' -> '.join(yol_names)}")
+
 
         output_text = '\n'.join(output_lines)
         return jsonify({
