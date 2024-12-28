@@ -13,14 +13,12 @@ class Ister4:
         if not start_author:
             raise ValueError(f"Başlangıç yazarı ORCID '{start_orcid}' bulunamadı.")
 
-        # İşbirliği grafını kopyala (başlangıç grafını değiştirmemek için)
+
         extended_graph = defaultdict(lambda: defaultdict(int))
 
-        # İşbirliklerinin işbirliklerini takip et
         visited = set()
-        to_visit = {start_author}  # Başlangıç yazarıyla başla
+        to_visit = {start_author}  
 
-        # Depth derecesi kadar gez (2. derece işbirliklerini de alacak)
         for _ in range(depth):
             next_to_visit = set()
 
