@@ -129,7 +129,7 @@ def ister3():
         # Görselleştirme dosyası oluştur
         temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
         temp_file.close()
-        avl_tree.visualize(temp_file.name)
+        avl_tree.visualize(orcid_to_author,temp_file.name)
 
         with open(temp_file.name, 'rb') as f:
             img_data = f.read()
@@ -137,7 +137,7 @@ def ister3():
 
         # Geçici dosyayı temizle
         os.remove(temp_file.name)
-        queue = temp
+        queue = temp 
         return jsonify({
             'output': f'Düğüm {orcid_to_author[start_node].name} başarıyla silindi.',
             'image': img_base64,

@@ -1477,30 +1477,41 @@ function highlightShortestPath(pathNodes) {
     resetPathHighlighting()
     console.log("Highlighting path for nodes:", pathNodes);  // Debugging log
 
-    // Highlight nodes in the shortest path with a delay
-    d3.selectAll(".node")
-        .filter(d => pathNodes.includes(d.orcid))
-        .transition()
-        .duration(1000)  // Half second duration
-        .delay((d, i) => i * 500)  // Delay each node by 250ms
-        .attr("fill", "pink");
+// Highlight nodes sequentially based on their position in the path
+d3.selectAll(".node")
+    .filter(d => pathNodes.includes(d.orcid))
+    .transition()
+    .duration(1000)  // 1 second duration for each node
+    .delay((d, i) => {
+        // Find the index of this node in pathNodes to determine delay
+        const nodeIndex = pathNodes.indexOf(d.orcid);
+        return nodeIndex * 1000; // Delay each node by 1 second * its position
+    })
+    .attr("fill", "pink");
 
-    // Highlight links in the shortest path with a delay
-    d3.selectAll(".link")
-        .filter(d => {
-            for (let i = 0; i < pathNodes.length - 1; i++) {
-                if ((d.source.orcid === pathNodes[i] && d.target.orcid === pathNodes[i + 1]) ||
-                    (d.source.orcid === pathNodes[i + 1] && d.target.orcid === pathNodes[i])) {
-                    return true;
-                }
+// Highlight links sequentially
+d3.selectAll(".link")
+    .filter(d => {
+        for (let i = 0; i < pathNodes.length - 1; i++) {
+            if ((d.source.orcid === pathNodes[i] && d.target.orcid === pathNodes[i + 1]) ||
+                (d.source.orcid === pathNodes[i + 1] && d.target.orcid === pathNodes[i])) {
+                return true;
             }
-            return false;
-        })
-        .transition()
-        .duration(1000)  // Half second duration
-        .delay((d, i) => pathNodes.indexOf(d.source.orcid) * 250)  // Delay links based on the first node
-        .attr("stroke", "pink")
-        .attr("stroke-width", 4);
+        }
+        return false;
+    })
+    .transition()
+    .duration(1000)  // 1 second duration for each link
+    .delay((d, i) => {
+        // Find the position of the source node in the path
+        const sourceIndex = pathNodes.indexOf(d.source.orcid);
+        const targetIndex = pathNodes.indexOf(d.target.orcid);
+        // Use the earlier index to time the link animation
+        const linkIndex = Math.min(sourceIndex, targetIndex);
+        return linkIndex * 1000; // Delay each link by 1 second * its position
+    })
+    .attr("stroke", "pink")
+    .attr("stroke-width", 4);
 }
 // Show popup with node data
 function showPopup(nodeData) {
