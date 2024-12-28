@@ -175,7 +175,7 @@ def ister4():
             if path:
                 cost, nodes = path[:2]
                 node_names = [node.name for node in nodes]
-                paths.append([name_to_author[node.name].orcid for node in nodes])
+                paths.append([orcid_to_author[node.orcid].orcid for node in nodes])
                 output.append(f" YAZAR {start.name}'dan  YAZAR {author.name} 'a: {' -> '.join(node_names)}  YOL MALİYETİ: {cost}")
 
         output_text = '\n'.join(output)
@@ -213,7 +213,7 @@ def ister5():
 
 @app.route('/ister1', methods=['POST'])
 def ister1():
-    global queue,name_to_author
+    global queue,name_to_author,orcid_to_author
     try:
         start_node = request.form.get('start_node')
         end_node = request.form.get('end_node')
@@ -239,7 +239,7 @@ def ister1():
         return jsonify({
             'success': True,
             'output': output_text,
-            'yol_nesne': [name_to_author[node.name].orcid for node in yol]  
+            'yol_nesne': [orcid_to_author[node.orcid].orcid for node in yol]  
         })
 
     except Exception as e:
@@ -264,7 +264,7 @@ def ister7():
             execution_time = end_time - start_time
             
             path_names = [author.name for author in current_path]  # Convert Author objects to their names
-            path = [name_to_author[author.name].orcid for author in current_path]
+            path = [orcid_to_author[author.orcid].orcid for author in current_path]
             print(f"En uzun yol: {' -> '.join(path_names)}")
             print(f"Yol uzunluğu: {len(current_path)}")
 
