@@ -1420,8 +1420,8 @@ function drawGraph(nodes, links) {
         .attr("class", "node")
         .attr("r", d => Math.sqrt(d.articles.length) * 10)
         .attr("fill", d => {
-            if (d.articles.length > 15) return "cornflowerblue";
-            else if (d.articles.length > 7) return "red";
+            if (d.articles.length > 20) return "cornflowerblue";
+            else if (d.articles.length > 5) return "#7e80c8";
             else return "#c8d5ff";
         })
         .on("click", function(event, d) {
@@ -1463,8 +1463,8 @@ function resetPathHighlighting() {
     d3.selectAll(".node")
         .attr("fill", d => {
             // Restore original coloring logic
-            if (d.articles.length > 15) return "cornflowerblue";
-            else if (d.articles.length > 7) return "red";
+            if (d.articles.length > 20) return "cornflowerblue";
+            else if (d.articles.length > 5) return "#7e80c8";
             else return "#c8d5ff";
         });
 
