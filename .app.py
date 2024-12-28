@@ -65,9 +65,9 @@ def ister2():
         priority_Queue = []
         if start_node_orcid in orcid_to_author:
             start_node = orcid_to_author[start_node_orcid]
-            Heap.heapPush(priority_Queue,len(priority_Queue),(len(collaboration_graph[start_node]),start_node))
+            Heap.heapPush(priority_Queue,len(priority_Queue),(len(start_node.articles),start_node))
             for coauthor, weight in collaboration_graph[start_node].items():
-                Heap.heapPush(priority_Queue, len(priority_Queue), (weight, coauthor))
+                Heap.heapPush(priority_Queue, len(priority_Queue), (len(coauthor.articles), coauthor))
         else:
             print(f"Start node '{start_node_orcid}' not found in the graph.")
         print("Priority Queue(Artan sıralamalı)")
