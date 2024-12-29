@@ -22,7 +22,7 @@ class Graph:
             coauthors = coauthors.strip('[]').replace("'", "").split(',')
             coauthors = [name.strip() for name in coauthors]
 
-            if len(coauthors) > 1:
+            if len(coauthors) > 0:
                 coauthors.pop(author_position - 1)
 
             for coauthor_name in coauthors:
@@ -47,7 +47,7 @@ class Graph:
             coauthors = row.coauthors.strip('[]').replace("'", "").split(',')
             coauthors = [name.strip() for name in coauthors]
 
-            if len(coauthors) > 1:
+            if len(coauthors) > 0:
                 coauthors.pop(row.author_position - 1)
 
             article = Article(row.doi, row.paper_title, coauthors)
@@ -59,7 +59,7 @@ class Graph:
 
             coauthors = [name.strip() for name in coauthors]
 
-            if len(coauthors) > 1:
+            if len(coauthors) > 0:
                 coauthors.pop(author_position - 1)
 
 
@@ -76,7 +76,7 @@ class Graph:
             coauthors = row.coauthors.strip('[]').replace("'", "").split(',')
             coauthors = [name.strip() for name in coauthors]
 
-            if len(coauthors) > 1:
+            if len(coauthors) > 0:
                 coauthors.pop(row.author_position - 1)
 
             # Collaboration graph'ı güncelle
